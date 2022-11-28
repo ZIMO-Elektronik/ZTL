@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake ZTLTests",
+      "type": "shell",
+      "isBackground": true,
+      "command": "cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug"
+    },
+    {
+      "label": "CMake ZTLTests Clang",
+      "type": "shell",
+      "isBackground": true,
+      "command": "cmake -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=CMakeModules/toolchains/clang.cmake -DCMAKE_BUILD_TYPE=Debug"
+    },
+    {
+      "label": "Ninja ZTLTests",
+      "type": "shell",
+      "isBackground": true,
+      "command": "ninja -C build ZTLTests"
+    },
+    {
+      "label": "Run ZTLTests",
+      "type": "shell",
+      "isBackground": true,
+      "command": "./build/tests/ZTLTests"
+    }
+  ]
+}
