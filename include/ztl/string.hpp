@@ -54,7 +54,7 @@ constexpr int32_t atoi(char const* str) {
 /// \param  dest  Pointer to the character array to write to
 /// \param  src   Pointer to the null-terminated byte string to copy from
 /// \return Pointer to the character array to write to
-constexpr char* strcpy(char* dest, const char* src) {
+constexpr char* strcpy(char* dest, char const* src) {
   size_t count{};
   while (src[count]) {
     dest[count] = src[count];
@@ -72,7 +72,7 @@ constexpr char* strcpy(char* dest, const char* src) {
 /// \param  src   Pointer to the byte string to copy from
 /// \param  count Maximum number of characters to copy
 /// \return Pointer to the character array to copy to
-constexpr char* strncpy(char* dest, const char* src, size_t count) {
+constexpr char* strncpy(char* dest, char const* src, size_t count) {
   for (auto i{0uz}; i < count; ++i)
     if (src[i]) dest[i] = src[i];
     else {
