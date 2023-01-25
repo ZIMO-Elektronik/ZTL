@@ -1,0 +1,17 @@
+name: tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  linux-gcc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: cmake -Bbuild
+      - run: cmake --build build --target ZTLTests
+      - working-directory: ./build
+        run: ctest

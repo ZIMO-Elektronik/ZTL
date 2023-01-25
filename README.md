@@ -1,5 +1,7 @@
 # ZTL
 
+[![build](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/build.yml/badge.svg)](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/build.yml) [![tests](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/tests.yml/badge.svg)](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/tests.yml)
+
 <img src="data/images/logo.png" width="20%" align="right"/>
 
 ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifically for embedded systems. It currently contains the following headers:
