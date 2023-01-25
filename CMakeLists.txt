@@ -1,17 +1,15 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 include(FetchContent)
 
-set(FETCHCONTENT_QUIET FALSE)
 FetchContent_Declare(
   CMakeModules
   GIT_REPOSITORY https://github.com/ZIMO-Elektronik/CMakeModules
-  GIT_PROGRESS TRUE
-  SOURCE_DIR ${CMAKE_BINARY_DIR}/CMakeModules)
+  GIT_TAG v0.0.2)
 FetchContent_MakeAvailable(CMakeModules)
 
 project(
   ZTL
-  VERSION 0.16.1
+  VERSION 0.16.2
   LANGUAGES CXX)
 
 add_library(ZTL INTERFACE)
