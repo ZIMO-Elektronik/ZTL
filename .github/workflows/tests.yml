@@ -13,5 +13,4 @@ jobs:
       - uses: actions/checkout@v3
       - run: cmake -Bbuild
       - run: cmake --build build --target ZTLTests
-      - working-directory: ./build
-        run: ctest --schedule-random
+      - run: ctest --test-dir build --schedule-random
