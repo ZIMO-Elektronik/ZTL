@@ -14,4 +14,4 @@ jobs:
       - run: cmake -Bbuild
       - run: cmake --build build --target ZTLTests
       - working-directory: ./build
-        run: ctest
+        run: ctest --schedule-random
