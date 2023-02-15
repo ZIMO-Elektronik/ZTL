@@ -54,12 +54,12 @@ struct circular_array {
     constexpr iterator_(iterator_ const&) = default;
 
     constexpr iterator_(iterator_<false> const& rhs) requires Const
-      : ptr_{rhs.ptr_},
-        i_{rhs.i_} {}
+      : ptr_{rhs.ptr_}, i_{rhs.i_} {}
 
     constexpr iterator_& operator=(iterator_ const&) = default;
 
-    constexpr iterator_& operator=(iterator_ const& rhs) requires Const {
+    constexpr iterator_& operator=(iterator_ const& rhs) requires Const
+    {
       ptr_ = rhs.ptr_;
       i_ = rhs.i_;
       return *this;

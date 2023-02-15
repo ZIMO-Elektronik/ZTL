@@ -90,7 +90,8 @@ constexpr int32_t sign(T value) {
 /// \param  end   Last value
 /// \return Linspace array
 template<size_t N, typename T>
-constexpr auto make_linspace(T start, T end) requires(N >= 1u) {
+constexpr auto make_linspace(T start, T end) requires(N >= 1u)
+{
   if constexpr (N == 1u) return end;
   else
     return std::invoke(
@@ -108,7 +109,8 @@ constexpr auto make_linspace(T start, T end) requires(N >= 1u) {
 /// \param  value         Value
 /// \return Digit at position I
 template<int I, std::integral T>
-requires(I == 1 || I % 10 == 0) constexpr auto digit(T value) {
+requires(I == 1 || I % 10 == 0)
+constexpr auto digit(T value) {
   return static_cast<T>((value / I) % 10);
 }
 

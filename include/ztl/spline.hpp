@@ -35,7 +35,8 @@ struct spline {
 /// \param  y                   Input y
 /// \return Array of splines
 template<std::floating_point T, size_t I>
-requires(I >= 3u) constexpr std::array<spline<T>, I - 1u> make_hermite_splines(
+requires(I >= 3u)
+constexpr std::array<spline<T>, I - 1u> make_hermite_splines(
   std::array<T, I> const& x, std::array<T, I> const& y) {
   std::array<spline<T>, I - 1u> splines{};
   std::array<T, I - 1u> h{};
@@ -94,7 +95,8 @@ requires(I >= 3u) constexpr std::array<spline<T>, I - 1u> make_hermite_splines(
 /// \param  splines             Splines
 /// \return Interpolated y
 template<std::floating_point T, size_t I, size_t J>
-requires(I >= 3u) constexpr std::array<T, J> eval_hermite_splines(
+requires(I >= 3u)
+constexpr std::array<T, J> eval_hermite_splines(
   std::array<T, I> const& x,
   std::array<T, I> const& y,
   std::array<T, J> const& sx,

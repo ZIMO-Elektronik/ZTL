@@ -18,7 +18,7 @@ namespace ztl {
 ///
 /// \param  value
 /// \return value * 10^-6
-constexpr float operator"" _u(unsigned long long value) {
+constexpr float operator""_u(unsigned long long value) {
   return static_cast<float>(static_cast<double>(value) / 1000000.0);
 }
 
@@ -26,7 +26,7 @@ constexpr float operator"" _u(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10^-6
-constexpr float operator"" _u(long double value) {
+constexpr float operator""_u(long double value) {
   return static_cast<float>(static_cast<double>(value) / 1000000.0);
 }
 
@@ -34,7 +34,7 @@ constexpr float operator"" _u(long double value) {
 ///
 /// \param  value
 /// \return value * 10^-3
-constexpr float operator"" _m(unsigned long long value) {
+constexpr float operator""_m(unsigned long long value) {
   return static_cast<float>(static_cast<double>(value) / 1000.0);
 }
 
@@ -42,7 +42,7 @@ constexpr float operator"" _m(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10^-3
-constexpr float operator"" _m(long double value) {
+constexpr float operator""_m(long double value) {
   return static_cast<float>(static_cast<double>(value) / 1000.0);
 }
 
@@ -50,7 +50,7 @@ constexpr float operator"" _m(long double value) {
 ///
 /// \param  value
 /// \return value * 10
-constexpr int32_t operator"" _d(unsigned long long value) {
+constexpr int32_t operator""_d(unsigned long long value) {
   return static_cast<int32_t>(value * 10);
 }
 
@@ -58,7 +58,7 @@ constexpr int32_t operator"" _d(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10
-constexpr int32_t operator"" _d(long double value) {
+constexpr int32_t operator""_d(long double value) {
   return static_cast<int32_t>(value * 10);
 }
 
@@ -66,7 +66,7 @@ constexpr int32_t operator"" _d(long double value) {
 ///
 /// \param  value
 /// \return value * 10^3
-constexpr int32_t operator"" _k(unsigned long long value) {
+constexpr int32_t operator""_k(unsigned long long value) {
   return static_cast<int32_t>(value * 1000);
 }
 
@@ -74,7 +74,7 @@ constexpr int32_t operator"" _k(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10^3
-constexpr int32_t operator"" _k(long double value) {
+constexpr int32_t operator""_k(long double value) {
   return static_cast<int32_t>(value * 1000);
 }
 
@@ -82,7 +82,7 @@ constexpr int32_t operator"" _k(long double value) {
 ///
 /// \param  value
 /// \return value * 10^4
-constexpr int32_t operator"" _10k(unsigned long long value) {
+constexpr int32_t operator""_10k(unsigned long long value) {
   return static_cast<int32_t>(value * 10000);
 }
 
@@ -90,7 +90,7 @@ constexpr int32_t operator"" _10k(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10^4
-constexpr int32_t operator"" _10k(long double value) {
+constexpr int32_t operator""_10k(long double value) {
   return static_cast<int32_t>(value * 10000);
 }
 
@@ -98,7 +98,7 @@ constexpr int32_t operator"" _10k(long double value) {
 ///
 /// \param  value
 /// \return value * 10^6
-constexpr int32_t operator"" _M(unsigned long long value) {
+constexpr int32_t operator""_M(unsigned long long value) {
   return static_cast<int32_t>(value * 1000000);
 }
 
@@ -106,7 +106,7 @@ constexpr int32_t operator"" _M(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10^6
-constexpr int32_t operator"" _M(long double value) {
+constexpr int32_t operator""_M(long double value) {
   return static_cast<int32_t>(value * 1000000);
 }
 
@@ -114,7 +114,7 @@ constexpr int32_t operator"" _M(long double value) {
 ///
 /// \param  value
 /// \return value * 10^7
-constexpr int32_t operator"" _10M(unsigned long long value) {
+constexpr int32_t operator""_10M(unsigned long long value) {
   return static_cast<int32_t>(value * 10000000);
 }
 
@@ -122,7 +122,7 @@ constexpr int32_t operator"" _10M(unsigned long long value) {
 ///
 /// \param  value
 /// \return value * 10^7
-constexpr int32_t operator"" _10M(long double value) {
+constexpr int32_t operator""_10M(long double value) {
   return static_cast<int32_t>(value * 10000000);
 }
 
@@ -130,7 +130,7 @@ constexpr int32_t operator"" _10M(long double value) {
 ///
 /// \param  frequency
 /// \return frequency * 10^3
-constexpr int32_t operator"" _Hz(unsigned long long frequency) {
+constexpr int32_t operator""_Hz(unsigned long long frequency) {
   return static_cast<int32_t>(frequency);
 }
 
@@ -138,7 +138,7 @@ constexpr int32_t operator"" _Hz(unsigned long long frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^3
-constexpr int32_t operator"" _Hz(long double frequency) {
+constexpr int32_t operator""_Hz(long double frequency) {
   return static_cast<int32_t>(frequency);
 }
 
@@ -146,7 +146,7 @@ constexpr int32_t operator"" _Hz(long double frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^3
-constexpr int32_t operator"" _kHz(unsigned long long frequency) {
+constexpr int32_t operator""_kHz(unsigned long long frequency) {
   return static_cast<int32_t>(frequency * 1000);
 }
 
@@ -154,7 +154,7 @@ constexpr int32_t operator"" _kHz(unsigned long long frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^3
-constexpr int32_t operator"" _kHz(long double frequency) {
+constexpr int32_t operator""_kHz(long double frequency) {
   return static_cast<int32_t>(frequency * 1000);
 }
 
@@ -162,7 +162,7 @@ constexpr int32_t operator"" _kHz(long double frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^4
-constexpr int32_t operator"" _10kHz(unsigned long long frequency) {
+constexpr int32_t operator""_10kHz(unsigned long long frequency) {
   return static_cast<int32_t>(frequency * 10000);
 }
 
@@ -170,7 +170,7 @@ constexpr int32_t operator"" _10kHz(unsigned long long frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^4
-constexpr int32_t operator"" _10kHz(long double frequency) {
+constexpr int32_t operator""_10kHz(long double frequency) {
   return static_cast<int32_t>(frequency * 10000);
 }
 
@@ -178,7 +178,7 @@ constexpr int32_t operator"" _10kHz(long double frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^6
-constexpr int32_t operator"" _MHz(unsigned long long frequency) {
+constexpr int32_t operator""_MHz(unsigned long long frequency) {
   return static_cast<int32_t>(frequency * 1000000);
 }
 
@@ -186,7 +186,7 @@ constexpr int32_t operator"" _MHz(unsigned long long frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^6
-constexpr int32_t operator"" _MHz(long double frequency) {
+constexpr int32_t operator""_MHz(long double frequency) {
   return static_cast<int32_t>(frequency * 1000000);
 }
 
@@ -194,7 +194,7 @@ constexpr int32_t operator"" _MHz(long double frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^7
-constexpr int32_t operator"" _10MHz(unsigned long long frequency) {
+constexpr int32_t operator""_10MHz(unsigned long long frequency) {
   return static_cast<int32_t>(frequency * 10000000);
 }
 
@@ -202,7 +202,7 @@ constexpr int32_t operator"" _10MHz(unsigned long long frequency) {
 ///
 /// \param  frequency
 /// \return frequency * 10^7
-constexpr int32_t operator"" _10MHz(long double frequency) {
+constexpr int32_t operator""_10MHz(long double frequency) {
   return static_cast<int32_t>(frequency * 10000000);
 }
 
@@ -210,7 +210,7 @@ constexpr int32_t operator"" _10MHz(long double frequency) {
 ///
 /// \param  time
 /// \return time * 10^-6
-constexpr float operator"" _us(unsigned long long time) {
+constexpr float operator""_us(unsigned long long time) {
   return static_cast<float>(static_cast<double>(time) / 1000000.0);
 }
 
@@ -218,7 +218,7 @@ constexpr float operator"" _us(unsigned long long time) {
 ///
 /// \param  time
 /// \return time * 10^-6
-constexpr float operator"" _us(long double time) {
+constexpr float operator""_us(long double time) {
   return static_cast<float>(static_cast<double>(time) / 1000000.0);
 }
 
@@ -226,7 +226,7 @@ constexpr float operator"" _us(long double time) {
 ///
 /// \param  time
 /// \return time * 10^-3
-constexpr float operator"" _ms(unsigned long long time) {
+constexpr float operator""_ms(unsigned long long time) {
   return static_cast<float>(static_cast<double>(time) / 1000.0);
 }
 
@@ -234,7 +234,7 @@ constexpr float operator"" _ms(unsigned long long time) {
 ///
 /// \param  time
 /// \return time * 10^-3
-constexpr float operator"" _ms(long double time) {
+constexpr float operator""_ms(long double time) {
   return static_cast<float>(static_cast<double>(time) / 1000.0);
 }
 
@@ -242,7 +242,7 @@ constexpr float operator"" _ms(long double time) {
 ///
 /// \param  temp
 /// \return temp + 273
-constexpr int32_t operator"" _C2K(unsigned long long temp) {
+constexpr int32_t operator""_C2K(unsigned long long temp) {
   return static_cast<int32_t>(temp + 273);
 }
 
@@ -250,7 +250,7 @@ constexpr int32_t operator"" _C2K(unsigned long long temp) {
 ///
 /// \param  temp
 /// \return temp + 273.15
-constexpr float operator"" _C2K(long double temp) {
+constexpr float operator""_C2K(long double temp) {
   return static_cast<float>(static_cast<double>(temp) + 273.15);
 }
 
