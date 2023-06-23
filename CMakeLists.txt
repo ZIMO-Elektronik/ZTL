@@ -4,13 +4,14 @@ include(FetchContent)
 FetchContent_Declare(
   CMakeModules
   GIT_REPOSITORY https://github.com/ZIMO-Elektronik/CMakeModules
-  GIT_TAG v0.0.5
+  GIT_TAG v0.0.7
   SOURCE_DIR ${CMAKE_BINARY_DIR}/CMakeModules)
 FetchContent_MakeAvailable(CMakeModules)
 
+version_from_git()
 project(
   ZTL
-  VERSION 0.16.2
+  VERSION ${VERSION_FROM_GIT}
   LANGUAGES CXX)
 
 add_library(ZTL INTERFACE)
