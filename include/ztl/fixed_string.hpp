@@ -23,14 +23,14 @@ struct fixed_string {
   constexpr fixed_string() {}
 
   constexpr fixed_string(char const (&str)[I + 1uz]) {
-    std::copy_n(&str[0uz], I, begin(str_));
+    std::copy_n(&str[0uz], I, begin(_str));
   }
 
-  constexpr char const* c_str() const { return data(str_); }
+  constexpr char const* c_str() const { return data(_str); }
 
-  constexpr auto operator[](size_t i) const { return str_[i]; };
+  constexpr auto operator[](size_t i) const { return _str[i]; };
 
-  std::array<char, I + 1uz> str_{};
+  std::array<char, I + 1uz> _str{};
 };
 
 template<size_t I>

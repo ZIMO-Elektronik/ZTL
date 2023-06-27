@@ -5,11 +5,11 @@
 #include <ztl/circular_array.hpp>
 
 struct S {
-  void add(int value) { ca.push_back(value); }
-  int sum() const { return std::accumulate(cbegin(ca), cend(ca), 0); }
+  void add(int value) { _ca.push_back(value); }
+  int sum() const { return std::accumulate(cbegin(_ca), cend(_ca), 0); }
 
 private:
-  ztl::circular_array<int, 10uz> ca;
+  ztl::circular_array<int, 10uz> _ca;
 };
 
 TEST(circular_array, const_correctness) {

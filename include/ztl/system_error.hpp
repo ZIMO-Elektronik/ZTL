@@ -23,12 +23,12 @@ namespace ztl {
 /// methods.
 struct error_code {
   constexpr error_code() = default;
-  constexpr error_code(std::errc e) : e_{e} {}
-  constexpr operator std::errc() const { return e_; }
-  explicit constexpr operator bool() const { return static_cast<bool>(e_); }
+  constexpr error_code(std::errc e) : _e{e} {}
+  constexpr operator std::errc() const { return _e; }
+  explicit constexpr operator bool() const { return static_cast<bool>(_e); }
 
 private:
-  std::errc e_{};
+  std::errc _e{};
 };
 
 /// Print error code

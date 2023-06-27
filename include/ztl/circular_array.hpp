@@ -49,64 +49,64 @@ struct circular_array {
     constexpr iterator_() = default;
 
     constexpr iterator_(circular_array_pointer ptr, index_type i)
-      : ptr_{ptr}, i_{i} {}
+      : _ptr{ptr}, _i{i} {}
 
     constexpr iterator_(iterator_ const&) = default;
 
     constexpr iterator_(iterator_<false> const& rhs) requires Const
-      : ptr_{rhs.ptr_}, i_{rhs.i_} {}
+      : _ptr{rhs._ptr}, _i{rhs._i} {}
 
     constexpr iterator_& operator=(iterator_ const&) = default;
 
     constexpr iterator_& operator=(iterator_ const& rhs) requires Const
     {
-      ptr_ = rhs.ptr_;
-      i_ = rhs.i_;
+      _ptr = rhs._ptr;
+      _i = rhs._i;
       return *this;
     }
 
     constexpr reference operator[](size_type i) const {
-      return ptr_->elems_[(i_ + i) % (I + 1uz)];
+      return _ptr->_elems[(_i + i) % (I + 1uz)];
     }
 
     constexpr iterator_& operator++() {
-      i_ = static_cast<index_type>((i_ + 1zu) % (I + 1zu));
+      _i = static_cast<index_type>((_i + 1zu) % (I + 1zu));
       return *this;
     }
 
     constexpr iterator_ operator++(int) {
       iterator_ retval{*this};
-      i_ = static_cast<index_type>((i_ + 1uz) % (I + 1uz));
+      _i = static_cast<index_type>((_i + 1uz) % (I + 1uz));
       return retval;
     }
 
     constexpr iterator_& operator--() {
       if constexpr (std::has_single_bit(I + 1uz))
-        i_ = static_cast<index_type>((i_ - 1uz) % (I + 1uz));
-      else i_ = static_cast<index_type>(i_ ? i_ - 1uz : I);
+        _i = static_cast<index_type>((_i - 1uz) % (I + 1uz));
+      else _i = static_cast<index_type>(_i ? _i - 1uz : I);
       return *this;
     }
 
     constexpr iterator_ operator--(int) {
       iterator_ retval{*this};
       if constexpr (std::has_single_bit(I + 1uz))
-        i_ = static_cast<index_type>((i_ - 1uz) % (I + 1uz));
-      else i_ = static_cast<index_type>(i_ ? i_ - 1uz : I);
+        _i = static_cast<index_type>((_i - 1uz) % (I + 1uz));
+      else _i = static_cast<index_type>(_i ? _i - 1uz : I);
       return retval;
     }
 
     constexpr iterator_ operator+(difference_type n) const {
-      return iterator_{ptr_, static_cast<index_type>((i_ + n) % (I + 1uz))};
+      return iterator_{_ptr, static_cast<index_type>((_i + n) % (I + 1uz))};
     }
 
     constexpr iterator_& operator+=(difference_type n) {
-      i_ = static_cast<index_type>((i_ + n) % (I + 1uz));
+      _i = static_cast<index_type>((_i + n) % (I + 1uz));
       return *this;
     }
 
     constexpr difference_type operator-(iterator_ const& rhs) const {
-      if (auto const diff{static_cast<difference_type>(i_ - rhs.i_)};
-          ptr_->rd_ <= ptr_->wr_)
+      if (auto const diff{static_cast<difference_type>(_i - rhs._i)};
+          _ptr->_rd <= _ptr->_wr)
         return diff;
       else {
         if (diff < 0) return diff + static_cast<difference_type>(I + 1uz);
@@ -117,25 +117,25 @@ struct circular_array {
 
     constexpr iterator_ operator-(difference_type n) const {
       if constexpr (std::has_single_bit(I + 1uz))
-        return iterator_{ptr_, static_cast<index_type>((i_ - n) % (I + 1uz))};
+        return iterator_{_ptr, static_cast<index_type>((_i - n) % (I + 1uz))};
       else
         return iterator_{
-          ptr_, static_cast<index_type>(i_ < n ? I + 1uz + i_ - n : i_ - n)};
+          _ptr, static_cast<index_type>(_i < n ? I + 1uz + _i - n : _i - n)};
     }
 
     constexpr iterator_& operator-=(difference_type n) {
       if constexpr (std::has_single_bit(I + 1uz))
-        i_ = static_cast<index_type>((i_ - n) % (I + 1uz));
-      else i_ = static_cast<index_type>(i_ < n ? I + 1uz + i_ - n : i_ - n);
+        _i = static_cast<index_type>((_i - n) % (I + 1uz));
+      else _i = static_cast<index_type>(_i < n ? I + 1uz + _i - n : _i - n);
       return *this;
     }
 
-    constexpr reference operator*() const { return ptr_->elems_[i_]; }
+    constexpr reference operator*() const { return _ptr->_elems[_i]; }
 
-    constexpr pointer operator->() const { return &ptr_->elems_[i_]; }
+    constexpr pointer operator->() const { return &_ptr->_elems[_i]; }
 
     constexpr bool operator==(iterator_ const& rhs) const {
-      return i_ == rhs.i_;
+      return _i == rhs._i;
     }
 
     constexpr bool operator!=(iterator_ const& rhs) const {
@@ -143,7 +143,7 @@ struct circular_array {
     }
 
     constexpr bool operator<(iterator_ const& rhs) const {
-      return ptr_->rd_ <= ptr_->wr_ ? i_ < rhs.i_ : i_ > rhs.i_;
+      return _ptr->_rd <= _ptr->_wr ? _i < rhs._i : _i > rhs._i;
     }
 
     constexpr bool operator>(iterator_ const& rhs) const { return rhs < *this; }
@@ -167,8 +167,8 @@ struct circular_array {
     }
 
   private:
-    circular_array_pointer ptr_{nullptr};
-    index_type i_{};
+    circular_array_pointer _ptr{nullptr};
+    index_type _i{};
   };
 
   using value_type = T;
@@ -184,34 +184,34 @@ struct circular_array {
 
   template<std::convertible_to<T>... Us>
   constexpr circular_array(Us&&... us) requires(sizeof...(Us) < I + 1uz)
-    : elems_{static_cast<T>(us)...}, wr_{sizeof...(Us)} {}
+    : _elems{static_cast<T>(us)...}, _wr{sizeof...(Us)} {}
 
   constexpr reference operator[](size_type i) {
-    return elems_[(rd_ + i) % (I + 1uz)];
+    return _elems[(_rd + i) % (I + 1uz)];
   }
 
   constexpr const_reference operator[](size_type i) const {
-    return elems_[(rd_ + i) % (I + 1uz)];
+    return _elems[(_rd + i) % (I + 1uz)];
   }
 
   /// Checks whether the container is empty
   ///
   /// \return true  Buffer is empty
   /// \return false Buffer is not empty
-  constexpr bool empty() const { return rd_ == wr_; }
+  constexpr bool empty() const { return _rd == _wr; }
 
   /// Checks whether the container is full
   ///
   /// \return true  Buffer is full
   /// \return false Buffer is not full
-  constexpr bool full() const { return rd_ == (wr_ + 1uz) % (I + 1uz); }
+  constexpr bool full() const { return _rd == (_wr + 1uz) % (I + 1uz); }
 
   /// Returns the number of elements
   ///
   /// \return Number of elements
   constexpr size_type size() const {
-    if (rd_ <= wr_) return static_cast<size_type>(wr_ - rd_);
-    else return static_cast<size_type>(I + 1uz - rd_ + wr_);
+    if (_rd <= _wr) return static_cast<size_type>(_wr - _rd);
+    else return static_cast<size_type>(I + 1uz - _rd + _wr);
   }
 
   /// Returns the number of elements
@@ -233,43 +233,43 @@ struct circular_array {
   constexpr size_type capacity() const { return I; }
 
   /// Removes all elements from the container
-  constexpr void clear() { rd_ = wr_ = 0u; }
+  constexpr void clear() { _rd = _wr = 0u; }
 
   /// Access the first element
   ///
   /// \return reference Reference to the first element
-  constexpr reference front() { return elems_[rd_]; }
+  constexpr reference front() { return _elems[_rd]; }
 
   /// Access the first element
   ///
   /// \return const_reference Constant reference to the first element
-  constexpr const_reference front() const { return elems_[rd_]; }
+  constexpr const_reference front() const { return _elems[_rd]; }
 
   /// Access the last element
   ///
   /// \return reference Reference to the last element
   constexpr reference back() {
-    if (empty()) return elems_[wr_];
+    if (empty()) return _elems[_wr];
     if constexpr (std::has_single_bit(I + 1uz))
-      return elems_[(wr_ - 1uz) % (I + 1uz)];
-    else return wr_ ? elems_[wr_ - 1uz] : elems_[I];
+      return _elems[(_wr - 1uz) % (I + 1uz)];
+    else return _wr ? _elems[_wr - 1uz] : _elems[I];
   }
 
   /// Access the last element
   ///
   /// \return const_reference Constant reference to the last element
   constexpr const_reference back() const {
-    if (empty()) return elems_[wr_];
+    if (empty()) return _elems[_wr];
     if constexpr (std::has_single_bit(I + 1uz))
-      return elems_[(wr_ - 1uz) % (I + 1uz)];
-    else return wr_ ? elems_[wr_ - 1uz] : elems_[I];
+      return _elems[(_wr - 1uz) % (I + 1uz)];
+    else return _wr ? _elems[_wr - 1uz] : _elems[I];
   }
 
   /// Adds an element to the front
   constexpr void push_front() {
     if (full()) return;
-    if constexpr (std::has_single_bit(I + 1uz)) rd_ = (rd_ - 1) % (I + 1uz);
-    else rd_ = rd_ ? rd_ - 1 : I;
+    if constexpr (std::has_single_bit(I + 1uz)) _rd = (_rd - 1) % (I + 1uz);
+    else _rd = _rd ? _rd - 1 : I;
   }
 
   /// Adds an element to the front
@@ -278,9 +278,9 @@ struct circular_array {
   constexpr void push_front(value_type const& element) {
     if (full()) return;
     if constexpr (std::has_single_bit(I + 1uz))
-      rd_ = static_cast<index_type>((rd_ - 1uz) % (I + 1uz));
-    else rd_ = static_cast<index_type>(rd_ ? rd_ - 1uz : I);
-    elems_[rd_] = element;
+      _rd = static_cast<index_type>((_rd - 1uz) % (I + 1uz));
+    else _rd = static_cast<index_type>(_rd ? _rd - 1uz : I);
+    _elems[_rd] = element;
   }
 
   /// Adds an element to the front
@@ -289,15 +289,15 @@ struct circular_array {
   constexpr void push_front(value_type&& element) {
     if (full()) return;
     if constexpr (std::has_single_bit(I + 1uz))
-      rd_ = static_cast<index_type>((rd_ - 1uz) % (I + 1uz));
-    else rd_ = static_cast<index_type>(rd_ ? rd_ - 1uz : I);
-    elems_[rd_] = std::move(element);
+      _rd = static_cast<index_type>((_rd - 1uz) % (I + 1uz));
+    else _rd = static_cast<index_type>(_rd ? _rd - 1uz : I);
+    _elems[_rd] = std::move(element);
   }
 
   /// Adds an element to the end
   constexpr void push_back() {
     if (full()) return;
-    wr_ = static_cast<index_type>((wr_ + 1uz) % (I + 1uz));
+    _wr = static_cast<index_type>((_wr + 1uz) % (I + 1uz));
   }
 
   /// Adds an element to the end
@@ -305,8 +305,8 @@ struct circular_array {
   /// \param  element Element to add
   constexpr void push_back(value_type const& element) {
     if (full()) return;
-    elems_[wr_] = element;
-    wr_ = static_cast<index_type>((wr_ + 1uz) % (I + 1uz));
+    _elems[_wr] = element;
+    _wr = static_cast<index_type>((_wr + 1uz) % (I + 1uz));
   }
 
   /// Adds an element to the end
@@ -314,30 +314,30 @@ struct circular_array {
   /// \param  element Element to add
   constexpr void push_back(value_type&& element) {
     if (full()) return;
-    elems_[wr_] = std::move(element);
-    wr_ = static_cast<index_type>((wr_ + 1uz) % (I + 1uz));
+    _elems[_wr] = std::move(element);
+    _wr = static_cast<index_type>((_wr + 1uz) % (I + 1uz));
   }
 
   /// Delete first element
   constexpr void pop_front() {
     if (empty()) return;
-    rd_ = static_cast<index_type>((rd_ + 1uz) % (I + 1uz));
+    _rd = static_cast<index_type>((_rd + 1uz) % (I + 1uz));
   }
 
   /// Delete last element
   constexpr void pop_back() {
     if (empty()) return;
     if constexpr (std::has_single_bit(I + 1uz))
-      wr_ = static_cast<index_type>((wr_ - 1uz) % (I + 1uz));
-    else wr_ = static_cast<index_type>(wr_ ? wr_ - 1uz : I);
+      _wr = static_cast<index_type>((_wr - 1uz) % (I + 1uz));
+    else _wr = static_cast<index_type>(_wr ? _wr - 1uz : I);
   }
 
-  constexpr iterator begin() { return iterator{this, rd_}; }
-  constexpr const_iterator begin() const { return const_iterator{this, rd_}; }
+  constexpr iterator begin() { return iterator{this, _rd}; }
+  constexpr const_iterator begin() const { return const_iterator{this, _rd}; }
   constexpr const_iterator cbegin() const { return begin(); }
 
-  constexpr iterator end() { return iterator{this, wr_}; }
-  constexpr const_iterator end() const { return const_iterator{this, wr_}; }
+  constexpr iterator end() { return iterator{this, _wr}; }
+  constexpr const_iterator end() const { return const_iterator{this, _wr}; }
   constexpr const_iterator cend() const { return end(); }
 
   constexpr reverse_iterator rbegin() { return reverse_iterator{end()}; }
@@ -358,9 +358,9 @@ struct circular_array {
   }
 
 private:
-  std::array<T, I + 1uz> elems_;
-  index_type rd_{};
-  index_type wr_{};
+  std::array<T, I + 1uz> _elems;
+  index_type _rd{};
+  index_type _wr{};
 };
 
 template<typename T, typename... Ts>

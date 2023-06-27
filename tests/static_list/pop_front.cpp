@@ -2,9 +2,9 @@
 
 TEST_F(StaticListTest, pop_front) {
   // 40 39 38
-  List::push_front(node38);
-  List::push_front(node39);
-  List::push_front(node40);
+  List::push_front(_node38);
+  List::push_front(_node39);
+  List::push_front(_node40);
   EXPECT_EQ(List::front(), 40);
 
   List::pop_front();

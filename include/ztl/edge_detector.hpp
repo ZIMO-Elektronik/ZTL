@@ -17,15 +17,15 @@ struct EdgeDetector {
   enum Polarity { None, Rising, Falling };
 
   constexpr EdgeDetector() = default;
-  explicit constexpr EdgeDetector(bool value) : value_{value} {}
+  explicit constexpr EdgeDetector(bool value) : _value{value} {}
 
   [[nodiscard]] constexpr Polarity operator()(bool value) {
-    if (value == value_) return None;
-    return (value_ = value) ? Rising : Falling;
+    if (value == _value) return None;
+    return (_value = value) ? Rising : Falling;
   }
 
 private:
-  bool value_{false};
+  bool _value{false};
 };
 
 }  // namespace ztl

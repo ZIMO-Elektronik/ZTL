@@ -25,22 +25,27 @@ struct explicit_wrapper {
   explicit constexpr explicit_wrapper() = default;
 
   explicit constexpr explicit_wrapper(value_type const& value)
-    : value_(value) {}
+    : _value(value) {}
 
-  template<typename U = T, typename = std::enable_if_t<!std::is_reference_v<U>>>
   explicit constexpr explicit_wrapper(value_type&& value)
-    : value_(std::move(value)) {}
+    : _value(std::move(value)) {}
 
-  constexpr value_type& value() & { return value_; }
-  constexpr value_type const& value() const& { return value_; }
-  constexpr value_type&& value() && { return std::move(value_); }
+  constexpr value_type& value() & { return _value; }
+  constexpr value_type const& value() const& { return _value; }
+  constexpr value_type&& value() && { return std::move(_value); }
+  constexpr value_type const&& value() const&& { return std::move(_value); }
+
   explicit constexpr operator value_type&() { return value(); }
   explicit constexpr operator value_type const&() const& { return value(); }
   explicit constexpr operator value_type&&() && { return std::move(value()); }
+  explicit constexpr operator value_type const&&() const&& {
+    return std::move(value());
+  }
+
   explicit constexpr operator bool() const { return value(); }
 
 private:
-  value_type value_{};
+  value_type _value{};
 };
 
 }  // namespace ztl

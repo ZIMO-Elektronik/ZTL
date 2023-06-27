@@ -25,32 +25,33 @@ struct implicit_wrapper {
   explicit constexpr implicit_wrapper() = default;
 
   explicit constexpr implicit_wrapper(value_type const& value)
-    : value_(value) {}
+    : _value(value) {}
 
-  template<typename U = T, typename = std::enable_if_t<!std::is_reference_v<U>>>
   explicit constexpr implicit_wrapper(value_type&& value)
-    : value_(std::move(value)) {}
+    : _value(std::move(value)) {}
 
   constexpr implicit_wrapper& operator=(value_type const& value) {
-    value_ = value;
+    _value = value;
     return *this;
   }
 
-  template<typename U = T, typename = std::enable_if_t<!std::is_reference_v<U>>>
   constexpr implicit_wrapper& operator=(value_type&& value) {
-    value_ = std::move(value);
+    _value = std::move(value);
     return *this;
   }
 
-  constexpr value_type& value() & { return value_; }
-  constexpr value_type const& value() const& { return value_; }
-  constexpr value_type&& value() && { return std::move(value_); }
+  constexpr value_type& value() & { return _value; }
+  constexpr value_type const& value() const& { return _value; }
+  constexpr value_type&& value() && { return std::move(_value); }
+  constexpr value_type const&& value() const&& { return std::move(_value); }
+
   constexpr operator value_type&() & { return value(); }
   constexpr operator value_type const&() const& { return value(); }
   constexpr operator value_type&&() && { return std::move(value()); }
+  constexpr operator value_type const&&() const&& { return std::move(value()); }
 
 private:
-  value_type value_{};
+  value_type _value{};
 };
 
 }  // namespace ztl
