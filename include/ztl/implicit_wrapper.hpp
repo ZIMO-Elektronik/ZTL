@@ -27,7 +27,6 @@ struct implicit_wrapper {
   explicit constexpr implicit_wrapper(value_type const& value)
     : value_(value) {}
 
-  template<typename U = T, typename = std::enable_if_t<!std::is_reference_v<U>>>
   explicit constexpr implicit_wrapper(value_type&& value)
     : value_(std::move(value)) {}
 
@@ -36,7 +35,6 @@ struct implicit_wrapper {
     return *this;
   }
 
-  template<typename U = T, typename = std::enable_if_t<!std::is_reference_v<U>>>
   constexpr implicit_wrapper& operator=(value_type&& value) {
     value_ = std::move(value);
     return *this;

@@ -27,7 +27,6 @@ struct explicit_wrapper {
   explicit constexpr explicit_wrapper(value_type const& value)
     : value_(value) {}
 
-  template<typename U = T, typename = std::enable_if_t<!std::is_reference_v<U>>>
   explicit constexpr explicit_wrapper(value_type&& value)
     : value_(std::move(value)) {}
 
