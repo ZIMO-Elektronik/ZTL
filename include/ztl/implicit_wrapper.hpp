@@ -45,9 +45,12 @@ struct implicit_wrapper {
   constexpr value_type& value() & { return value_; }
   constexpr value_type const& value() const& { return value_; }
   constexpr value_type&& value() && { return std::move(value_); }
+  constexpr value_type const&& value() const&& { return std::move(value_); }
+
   constexpr operator value_type&() & { return value(); }
   constexpr operator value_type const&() const& { return value(); }
   constexpr operator value_type&&() && { return std::move(value()); }
+  constexpr operator value_type const&&() const&& { return std::move(value()); }
 
 private:
   value_type value_{};

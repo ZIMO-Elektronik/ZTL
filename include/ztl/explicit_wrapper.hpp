@@ -34,9 +34,15 @@ struct explicit_wrapper {
   constexpr value_type& value() & { return value_; }
   constexpr value_type const& value() const& { return value_; }
   constexpr value_type&& value() && { return std::move(value_); }
+  constexpr value_type const&& value() const&& { return std::move(value_); }
+
   explicit constexpr operator value_type&() { return value(); }
   explicit constexpr operator value_type const&() const& { return value(); }
   explicit constexpr operator value_type&&() && { return std::move(value()); }
+  explicit constexpr operator value_type const&&() const&& {
+    return std::move(value());
+  }
+
   explicit constexpr operator bool() const { return value(); }
 
 private:

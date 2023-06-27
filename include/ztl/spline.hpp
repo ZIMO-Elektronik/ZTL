@@ -24,7 +24,9 @@ namespace ztl {
 /// \tparam std::floating_point Type
 template<std::floating_point T>
 struct spline {
-  T a3{}, a2{}, a1{};
+  T a3{};
+  T a2{};
+  T a1{};
 };
 
 /// Make splines
@@ -35,47 +37,49 @@ struct spline {
 /// \param  y                   Input y
 /// \return Array of splines
 template<std::floating_point T, size_t I>
-requires(I >= 3u)
-constexpr std::array<spline<T>, I - 1u> make_hermite_splines(
+requires(I >= 3uz)
+constexpr std::array<spline<T>, I - 1uz> make_hermite_splines(
   std::array<T, I> const& x, std::array<T, I> const& y) {
-  std::array<spline<T>, I - 1u> splines{};
-  std::array<T, I - 1u> h{};
+  std::array<spline<T>, I - 1uz> splines{};
+  std::array<T, I - 1uz> h{};
   std::array<T, I> del{};
   std::array<T, I> s{};
 
-  for (auto i{0u}; i < I - 1u; ++i) {
-    h[i] = x[i + 1u] - x[i];
-    del[i] = (y[i + 1u] - y[i]) / h[i];
+  for (auto i{0uz}; i < I - 1u; ++i) {
+    h[i] = x[i + 1uz] - x[i];
+    del[i] = (y[i + 1uz] - y[i]) / h[i];
   }
 
   // Find slopes at interior points
-  for (auto i{0u}; i < I - 1u; ++i) {
-    if ((sign(del[i + 1u]) * sign(del[i])) <= 0) continue;
-    auto const hs{h[i + 1u] + h[i]};
-    auto const dmax{std::max(std::abs(del[i]), std::abs(del[i + 1u]))};
-    auto const dmin{std::min(std::abs(del[i]), std::abs(del[i + 1u]))};
-    s[i + 1u] = dmin / (((h[i] + hs) / (3u * hs)) * (del[i] / dmax) +
-                        ((hs + h[i + 1u]) / (3u * hs)) * (del[i + 1u] / dmax));
+  for (auto i{0uz}; i < I - 1u; ++i) {
+    if ((sign(del[i + 1uz]) * sign(del[i])) <= 0) continue;
+    auto const hs{h[i + 1uz] + h[i]};
+    auto const dmax{std::max(std::abs(del[i]), std::abs(del[i + 1uz]))};
+    auto const dmin{std::min(std::abs(del[i]), std::abs(del[i + 1uz]))};
+    s[i + 1uz] =
+      dmin / (((h[i] + hs) / (3u * hs)) * (del[i] / dmax) +
+              ((hs + h[i + 1uz]) / (3u * hs)) * (del[i + 1uz] / dmax));
   }
 
   // Find slopes at end points
-  s[0u] = ((2u * h[0u] + h[1u]) * del[0u] - h[0u] * del[1u]) / (h[0u] + h[1u]);
-  if (sign(s[0u]) != sign(del[0u])) s[0u] = 0;
-  else if ((sign(del[0u]) != sign(del[1u])) &&
-           (std::abs(s[0u]) > std::abs(3u * del[0u])))
-    s[0u] = 3u * del[0u];
+  s[0uz] =
+    ((2u * h[0uz] + h[1uz]) * del[0uz] - h[0uz] * del[1uz]) / (h[0uz] + h[1uz]);
+  if (sign(s[0uz]) != sign(del[0uz])) s[0uz] = 0;
+  else if ((sign(del[0uz]) != sign(del[1uz])) &&
+           (std::abs(s[0uz]) > std::abs(3u * del[0uz])))
+    s[0uz] = 3u * del[0uz];
 
-  s[I - 1u] =
-    ((2u * h[I - 2u] + h[I - 3u]) * del[I - 2u] - h[I - 2u] * del[I - 3u]) /
-    (h[I - 2u] + h[I - 3u]);
-  if (sign(s[I - 1u]) != sign(del[I - 2u])) s[I - 1u] = 0;
-  else if ((sign(del[I - 2u]) != sign(del[I - 3u])) &&
-           (std::abs(s[I - 1u]) > std::abs(3u * del[I - 2u])))
-    s[I - 1u] = 3u * del[I - 2u];
+  s[I - 1uz] = ((2u * h[I - 2uz] + h[I - 3uz]) * del[I - 2uz] -
+                h[I - 2uz] * del[I - 3uz]) /
+               (h[I - 2uz] + h[I - 3uz]);
+  if (sign(s[I - 1uz]) != sign(del[I - 2uz])) s[I - 1uz] = 0;
+  else if ((sign(del[I - 2uz]) != sign(del[I - 3uz])) &&
+           (std::abs(s[I - 1uz]) > std::abs(3u * del[I - 2uz])))
+    s[I - 1uz] = 3u * del[I - 2uz];
 
-  for (auto i{0u}; i < I - 1u; ++i) {
+  for (auto i{0uz}; i < I - 1u; ++i) {
     auto const dzzdx{(del[i] - s[i]) / h[i]};
-    auto const dzdxdx{(s[i + 1u] - del[i]) / h[i]};
+    auto const dzdxdx{(s[i + 1uz] - del[i]) / h[i]};
     splines[i].a1 = s[i];
     splines[i].a2 = 2u * dzzdx - dzdxdx;
     splines[i].a3 = (dzdxdx - dzzdx) / h[i];
@@ -95,7 +99,7 @@ constexpr std::array<spline<T>, I - 1u> make_hermite_splines(
 /// \param  splines             Splines
 /// \return Interpolated y
 template<std::floating_point T, size_t I, size_t J>
-requires(I >= 3u)
+requires(I >= 3uz)
 constexpr std::array<T, J> eval_hermite_splines(
   std::array<T, I> const& x,
   std::array<T, I> const& y,
@@ -104,9 +108,9 @@ constexpr std::array<T, J> eval_hermite_splines(
   std::array<T, J> sy{};
   size_t count{};
 
-  for (auto i{0u}; i < I - 1u; ++i) {
+  for (auto i{0uz}; i < I - 1u; ++i) {
     if (i + 1u >= I) break;
-    while (sx[count] <= x[i + 1u]) {
+    while (sx[count] <= x[i + 1uz]) {
       auto const del{sx[count] - x[i]};
       sy[count++] = y[i] + splines[i].a1 * del + splines[i].a2 * del * del +
                     splines[i].a3 * del * del * del;
