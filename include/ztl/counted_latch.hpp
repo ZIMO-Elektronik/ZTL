@@ -33,39 +33,42 @@ struct counted_latch {
   ///
   /// \param  value Initial value
   constexpr counted_latch(value_type const& value)
-    : value_{value}, next_value_{value} {}
+    : _value{value}, _next_value{value} {}
 
   /// Set latch
   ///
   /// \param  value Next value
   void set(value_type const& value) {
-    if (next_value_ != value) {
+    if (_next_value != value) {
       reset();
-      next_value_ = value;
+      _next_value = value;
     }
-    if (++count_ < I) return;
+    if (++_count < I) return;
     reset();
-    value_ = next_value_;
+    _value = _next_value;
   }
 
   /// Reset latch
-  void reset() { count_ = 0u; }
+  void reset() { _count = 0u; }
 
   /// Reset latch
   ///
   /// \param  value Reset value
   void reset(value_type const& value) {
     reset();
-    value_ = next_value_ = value;
+    _value = _next_value = value;
   }
 
-  constexpr value_type const& value() const& { return value_; }
+  constexpr value_type const& value() const& { return _value; }
+  constexpr value_type const&& value() const&& { return std::move(_value); }
+
   constexpr operator value_type const&() const& { return value(); }
+  constexpr operator value_type const&&() const&& { return std::move(value()); }
 
 private:
-  T value_{};
-  T next_value_{};
-  smallest_unsigned_t<I> count_{};
+  T _value{};
+  T _next_value{};
+  smallest_unsigned_t<I> _count{};
 };
 
 }  // namespace ztl

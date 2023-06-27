@@ -32,8 +32,8 @@ struct link {
 template<typename T>
 struct node : detail::link {
   constexpr node() = default;
-  constexpr node(T element) : element_{element} {}
-  T element_;
+  constexpr node(T element) : _element{element} {}
+  T _element;
 };
 
 /// static_list implements a doubly linked list. In contrast to the std version
@@ -55,37 +55,37 @@ struct static_list {
     using node_ = node<value_type>;
 
     constexpr iterator() = default;
-    constexpr iterator(detail::link* link) : link_{link} {}
+    constexpr iterator(detail::link* link) : _link{link} {}
 
     iterator& operator++() {
-      link_ = link_->next;
+      _link = _link->next;
       return *this;
     }
 
     iterator operator++(int) {
       iterator const tmp{*this};
-      link_ = link_->next;
+      _link = _link->next;
       return tmp;
     }
 
     iterator& operator--() {
-      link_ = link_->prev;
+      _link = _link->prev;
       return *this;
     }
 
     iterator operator--(int) {
       iterator const tmp{*this};
-      link_ = link_->prev;
+      _link = _link->prev;
       return tmp;
     }
 
-    bool operator==(iterator const& rhs) const { return link_ == rhs.link_; }
+    bool operator==(iterator const& rhs) const { return _link == rhs._link; }
     bool operator!=(iterator const& rhs) const { return !(*this == rhs); }
 
-    reference operator*() const { return static_cast<node_*>(link_)->element_; }
-    pointer operator->() const { return &static_cast<node_*>(link_)->element_; }
+    reference operator*() const { return static_cast<node_*>(_link)->_element; }
+    pointer operator->() const { return &static_cast<node_*>(_link)->_element; }
 
-    detail::link* link_{nullptr};
+    detail::link* _link{nullptr};
   };
 
   using value_type = T;
@@ -116,7 +116,7 @@ struct static_list {
   /// Access the last element
   ///
   /// \return reference Reference to the last element
-  static reference back() { return *iterator{tail_.prev}; }
+  static reference back() { return *iterator{_tail.prev}; }
 
   /// Prepends the given element value to the beginning of the container
   ///
@@ -132,7 +132,7 @@ struct static_list {
   static void push_back(node_& node) { insert(end(), node); }
 
   /// Removes the last element of the container
-  static void pop_back() { erase(iterator{tail_.prev}); }
+  static void pop_back() { erase(iterator{_tail.prev}); }
 
   /// Inserts elements at the specified location in the container
   ///
@@ -140,9 +140,9 @@ struct static_list {
   /// \param  node  Node to be inserted
   /// \return Iterator that points to the inserted node
   static iterator insert(iterator pos, node_& node) {
-    node.prev = pos.link_->prev;
-    node.next = pos.link_;
-    pos.link_->prev = pos.link_->prev->next = &node;
+    node.prev = pos._link->prev;
+    node.next = pos._link;
+    pos._link->prev = pos._link->prev->next = &node;
     return iterator{&node};
   }
 
@@ -151,10 +151,10 @@ struct static_list {
   /// \param  pos Iterator pointing at the node to be erased
   /// \return Iterator pointing to the next element (or end())
   static iterator erase(iterator pos) {
-    auto const tmp{pos.link_->next};
-    pos.link_->prev->next = pos.link_->next;
-    pos.link_->next->prev = pos.link_->prev;
-    pos.link_->next = pos.link_->prev = nullptr;
+    auto const tmp{pos._link->next};
+    pos._link->prev->next = pos._link->next;
+    pos._link->next->prev = pos._link->prev;
+    pos._link->next = pos._link->prev = nullptr;
     return iterator{tmp};
   }
 
@@ -189,15 +189,15 @@ struct static_list {
     }
   }
 
-  static iterator begin() { return iterator{tail_.next}; }
+  static iterator begin() { return iterator{_tail.next}; }
 
-  static iterator end() { return iterator{&tail_}; }
+  static iterator end() { return iterator{&_tail}; }
 
 private:
-  static detail::link tail_;
+  static detail::link _tail;
 };
 
 template<typename T>
-detail::link static_list<T>::tail_{&tail_, &tail_};
+detail::link static_list<T>::_tail{&_tail, &_tail};
 
 }  // namespace ztl

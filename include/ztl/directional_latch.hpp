@@ -32,39 +32,42 @@ struct directional_latch {
   /// Ctor
   ///
   /// \param  value Initial value
-  constexpr directional_latch(value_type const& value) : value_{value} {};
+  constexpr directional_latch(value_type const& value) : _value{value} {};
 
   /// Set latch
   ///
   /// \param  value Next value
   void set(value_type const& value) {
-    if ((value == value_) || (less_ && value > value_) ||
-        (!less_ && value < value_))
+    if ((value == _value) || (_less && value > _value) ||
+        (!_less && value < _value))
       reset();
-    if (!count_) less_ = value < value_;
-    if (++count_ < I) return;
+    if (!_count) _less = value < _value;
+    if (++_count < I) return;
     reset();
-    value_ = value;
+    _value = value;
   }
 
   /// Reset latch
-  void reset() { count_ = 0u; }
+  void reset() { _count = 0u; }
 
   /// Reset latch
   ///
   /// \param  value Reset value
   void reset(value_type const& value) {
     reset();
-    value_ = value;
+    _value = value;
   }
 
-  constexpr value_type const& value() const& { return value_; }
+  constexpr value_type const& value() const& { return _value; }
+  constexpr value_type const&& value() const&& { return std::move(_value); }
+
   constexpr operator value_type const&() const& { return value(); }
+  constexpr operator value_type const&&() const&& { return std::move(value()); }
 
 private:
-  T value_{};
-  smallest_unsigned_t<I> count_{};
-  bool less_{};
+  T _value{};
+  smallest_unsigned_t<I> _count{};
+  bool _less{};
 };
 
 }  // namespace ztl

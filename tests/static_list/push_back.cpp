@@ -2,9 +2,9 @@
 
 TEST_F(StaticListTest, push_back) {
   // 44 45 46
-  List::push_back(node44);
-  List::push_back(node45);
-  List::push_back(node46);
+  List::push_back(_node44);
+  List::push_back(_node45);
+  List::push_back(_node46);
 
   auto it{List::begin()};
   EXPECT_EQ(*it++, 44);

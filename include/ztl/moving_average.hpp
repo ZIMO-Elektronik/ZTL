@@ -27,7 +27,7 @@ namespace ztl {
 ///                   false May lose precision when using small values
 template<typename T, int I, bool Precision = true>
 struct moving_average {
-  static_assert(I > 1u);
+  static_assert(I > 1);
 
   using value_type = T;
 
@@ -36,29 +36,29 @@ struct moving_average {
 
   /// Ctor
   constexpr moving_average(value_type const& rhs)
-    : value_{Precision ? static_cast<value_type>(rhs * I) : rhs} {}
+    : _value{Precision ? static_cast<value_type>(rhs * I) : rhs} {}
 
   /// Assignment
   value_type& operator=(value_type const& rhs) {
-    return value_ = Precision ? static_cast<value_type>(rhs * I) : rhs;
+    return _value = Precision ? static_cast<value_type>(rhs * I) : rhs;
   }
 
   /// Addition assignment
   value_type& operator+=(value_type const& rhs) {
     if constexpr (Precision)
-      return value_ = static_cast<value_type>(value_ + (rhs - value_ / I));
-    else return value_ = static_cast<value_type>(value_ + (rhs - value_) / I);
+      return _value = static_cast<value_type>(_value + (rhs - _value / I));
+    else return _value = static_cast<value_type>(_value + (rhs - _value) / I);
   }
 
   constexpr value_type value() const {
-    if constexpr (Precision) return static_cast<value_type>(value_ / I);
-    else return value_;
+    if constexpr (Precision) return static_cast<value_type>(_value / I);
+    else return _value;
   }
 
   constexpr operator value_type() const { return value(); }
 
 private:
-  value_type value_{};
+  value_type _value{};
 };
 
 }  // namespace ztl
