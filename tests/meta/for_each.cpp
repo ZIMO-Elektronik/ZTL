@@ -14,9 +14,9 @@ TEST(meta, for_each) {
   };
 
   struct MockFunctor : Functor {
-    MOCK_METHOD1(f, void(int));
-    MOCK_METHOD1(f, void(char const*));
-    MOCK_METHOD1(f, void(char));
+    MOCK_METHOD(void, f, (int), (override));
+    MOCK_METHOD(void, f, (char const*), (override));
+    MOCK_METHOD(void, f, (char), (override));
 
     // Can't mock operator overloads directly
     void operator()(int i) { return f(i); }

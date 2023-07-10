@@ -1,14 +1,16 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/array.hpp>
 #include <ztl/spline.hpp>
 
 // Interpolate x, y to sx, sy
 TEST(spline, spline) {
   constexpr std::array x{1.0, 64.0, 128.0};
   constexpr std::array y{512.0, 20480.0, 61440.0};
-  constexpr std::array<double, 128u> sx{ztl::make_array<double>(
-    [](size_t i) { return i + 1; }, std::make_index_sequence<128u>{})};
+  constexpr auto sx{std::invoke(
+    []<size_t... Is>(std::index_sequence<Is...>) {
+      return std::array{static_cast<double>(Is + 1uz)...};
+    },
+    std::make_index_sequence<128u>{})};
 
   constexpr auto splines{ztl::make_hermite_splines(x, y)};
   constexpr auto sy{ztl::eval_hermite_splines(x, y, sx, splines)};

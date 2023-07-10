@@ -22,7 +22,6 @@ TEST(circular_array, full) {
   EXPECT_EQ(c.back(), 4);
   EXPECT_TRUE(c.full());
 
-  // Trying to add further elements silently fails
-  c.push_back(42);
-  EXPECT_EQ(c.back(), 4);
+  // Trying to add further elements causes undefined behavior
+  EXPECT_DEATH(c.push_back(42), "");
 }

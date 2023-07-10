@@ -12,6 +12,6 @@ TEST(circular_array, empty) {
   c.pop_back();
   EXPECT_TRUE(c.empty());
 
-  c.push_front(42);
-  EXPECT_FALSE(c.empty());
+  // Trying to remove further elements causes undefined behavior
+  EXPECT_DEATH(c.pop_back(), "");
 }

@@ -5,9 +5,6 @@
 <img src="data/images/logo.png" width="20%" align="right"/>
 
 ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifically for embedded systems. It currently contains the following headers:
-- array.hpp  
-  make_array function which takes a callable and an std::integer_sequence
-
 - bits.hpp  
   Various constexpr functions for bitmasking things
 
