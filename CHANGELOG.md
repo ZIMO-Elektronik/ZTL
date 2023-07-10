@@ -1,6 +1,7 @@
 # Changelog
 
 ##
+- Add static_vector
 - circular_array
   - Calling modifiers may cause UB
   - Calling element access if empty causes UB

@@ -59,6 +59,9 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
 - static_list.hpp  
   Doubly linked list which manages externally created nodes
 
+- static_vector.hpp  
+  Incomplete implementation of std::static_vector proposal [P0843r6](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p0843r6.html)
+
 - string.hpp  
   Constexpr implementations of atoi, strcmp, strlen
 

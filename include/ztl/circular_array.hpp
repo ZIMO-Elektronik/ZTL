@@ -182,10 +182,9 @@ struct circular_array {
 
   // Construct/copy/destroy
   constexpr circular_array() = default;
-
-  template<std::convertible_to<T>... Us>
-  constexpr circular_array(Us&&... us) requires(sizeof...(Us) < I + 1uz)
-    : _data{static_cast<T>(us)...}, _wr{sizeof...(Us)} {}
+  template<std::convertible_to<T>... Ts>
+  constexpr circular_array(Ts&&... ts) requires(sizeof...(Ts) < I + 1uz)
+    : _data{static_cast<T>(ts)...}, _wr{sizeof...(Ts)} {}
 
   // Iterators
   constexpr iterator begin() { return iterator{this, _rd}; }
@@ -254,19 +253,19 @@ struct circular_array {
     if constexpr (std::has_single_bit(I + 1uz)) _rd = (_rd - 1) % (I + 1uz);
     else _rd = _rd ? _rd - 1 : I;
   }
-  constexpr void push_front(value_type const& element) {
+  constexpr void push_front(value_type const& value) {
     assert(!full());
     if constexpr (std::has_single_bit(I + 1uz))
       _rd = static_cast<size_type>((_rd - 1uz) % (I + 1uz));
     else _rd = static_cast<size_type>(_rd ? _rd - 1uz : I);
-    _data[_rd] = element;
+    _data[_rd] = value;
   }
-  constexpr void push_front(value_type&& element) {
+  constexpr void push_front(value_type&& value) {
     assert(!full());
     if constexpr (std::has_single_bit(I + 1uz))
       _rd = static_cast<size_type>((_rd - 1uz) % (I + 1uz));
     else _rd = static_cast<size_type>(_rd ? _rd - 1uz : I);
-    _data[_rd] = std::move(element);
+    _data[_rd] = std::move(value);
   }
   constexpr void pop_front() {
     assert(!empty());
@@ -276,14 +275,14 @@ struct circular_array {
     assert(!full());
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
-  constexpr void push_back(value_type const& element) {
+  constexpr void push_back(value_type const& value) {
     assert(!full());
-    _data[_wr] = element;
+    _data[_wr] = value;
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
-  constexpr void push_back(value_type&& element) {
+  constexpr void push_back(value_type&& value) {
     assert(!full());
-    _data[_wr] = std::move(element);
+    _data[_wr] = std::move(value);
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
   constexpr void pop_back() {
@@ -294,6 +293,7 @@ struct circular_array {
   }
   constexpr void clear() { _rd = _wr = 0u; }
 
+  // Non-member functions
   friend constexpr auto operator<=>(circular_array const& lhs,
                                     circular_array const& rhs) = default;
 
