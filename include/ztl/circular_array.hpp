@@ -232,11 +232,13 @@ struct circular_array {
   constexpr reference front() { return _data[_rd]; }
   constexpr const_reference front() const { return _data[_rd]; }
   constexpr reference back() {
+    assert(!empty());
     if constexpr (std::has_single_bit(I + 1uz))
       return _data[(_wr - 1uz) % (I + 1uz)];
     else return _wr ? _data[_wr - 1uz] : _data[I];
   }
   constexpr const_reference back() const {
+    assert(!empty());
     if constexpr (std::has_single_bit(I + 1uz))
       return _data[(_wr - 1uz) % (I + 1uz)];
     else return _wr ? _data[_wr - 1uz] : _data[I];
@@ -248,44 +250,44 @@ struct circular_array {
 
   // Modifiers
   constexpr void push_front() {
-    if (full()) return;
+    assert(!full());
     if constexpr (std::has_single_bit(I + 1uz)) _rd = (_rd - 1) % (I + 1uz);
     else _rd = _rd ? _rd - 1 : I;
   }
   constexpr void push_front(value_type const& element) {
-    if (full()) return;
+    assert(!full());
     if constexpr (std::has_single_bit(I + 1uz))
       _rd = static_cast<size_type>((_rd - 1uz) % (I + 1uz));
     else _rd = static_cast<size_type>(_rd ? _rd - 1uz : I);
     _data[_rd] = element;
   }
   constexpr void push_front(value_type&& element) {
-    if (full()) return;
+    assert(!full());
     if constexpr (std::has_single_bit(I + 1uz))
       _rd = static_cast<size_type>((_rd - 1uz) % (I + 1uz));
     else _rd = static_cast<size_type>(_rd ? _rd - 1uz : I);
     _data[_rd] = std::move(element);
   }
   constexpr void pop_front() {
-    if (empty()) return;
+    assert(!empty());
     _rd = static_cast<size_type>((_rd + 1uz) % (I + 1uz));
   }
   constexpr void push_back() {
-    if (full()) return;
+    assert(!full());
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
   constexpr void push_back(value_type const& element) {
-    if (full()) return;
+    assert(!full());
     _data[_wr] = element;
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
   constexpr void push_back(value_type&& element) {
-    if (full()) return;
+    assert(!full());
     _data[_wr] = std::move(element);
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
   constexpr void pop_back() {
-    if (empty()) return;
+    assert(!empty());
     if constexpr (std::has_single_bit(I + 1uz))
       _wr = static_cast<size_type>((_wr - 1uz) % (I + 1uz));
     else _wr = static_cast<size_type>(_wr ? _wr - 1uz : I);
