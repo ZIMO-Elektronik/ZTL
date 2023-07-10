@@ -232,13 +232,11 @@ struct circular_array {
   constexpr reference front() { return _data[_rd]; }
   constexpr const_reference front() const { return _data[_rd]; }
   constexpr reference back() {
-    if (empty()) return _data[_wr];
     if constexpr (std::has_single_bit(I + 1uz))
       return _data[(_wr - 1uz) % (I + 1uz)];
     else return _wr ? _data[_wr - 1uz] : _data[I];
   }
   constexpr const_reference back() const {
-    if (empty()) return _data[_wr];
     if constexpr (std::has_single_bit(I + 1uz))
       return _data[(_wr - 1uz) % (I + 1uz)];
     else return _wr ? _data[_wr - 1uz] : _data[I];
