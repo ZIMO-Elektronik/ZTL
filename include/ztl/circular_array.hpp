@@ -163,7 +163,7 @@ struct circular_array {
     }
 
   private:
-    circular_array_pointer _ptr{nullptr};
+    circular_array_pointer _ptr{};
     size_type _i{};
   };
 

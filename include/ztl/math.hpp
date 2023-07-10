@@ -96,8 +96,8 @@ constexpr auto make_linspace(T start, T end) requires(N >= 1u)
   else
     return std::invoke(
       [&]<size_t... Is>(std::index_sequence<Is...>) {
-        std::array<T, N> retval{start + Is * (end - start) / (N - 1u)...};
-        return retval;
+        return std::array<T, N>{start + static_cast<T>(Is) * (end - start) /
+                                          static_cast<T>(N - 1u)...};
       },
       std::make_index_sequence<N>{});
 }
