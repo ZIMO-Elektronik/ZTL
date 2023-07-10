@@ -5,6 +5,7 @@
   - Calling modifiers may cause UB
   - Calling element access if empty causes UB
   - Remove ssize method
+- Remove array header
 
 ## 0.16.2
 - Remove is_enum_class

@@ -12,7 +12,6 @@
 
 #include <cstdint>
 #include <type_traits>
-#include "array.hpp"
 
 namespace ztl {
 

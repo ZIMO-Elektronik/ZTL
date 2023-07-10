@@ -12,7 +12,6 @@
 
 #pragma once
 
-#include <array>
 #include "math.hpp"
 
 namespace ztl {
