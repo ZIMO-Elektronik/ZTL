@@ -102,6 +102,21 @@ constexpr auto make_linspace(T start, T end) requires(N >= 1u)
       std::make_index_sequence<N>{});
 }
 
+/// Remainder of euclidean division
+///
+/// https://en.wikipedia.org/wiki/Modulo
+///
+/// \tparam T   Type of values
+/// \param  lhs Dividend
+/// \param  rhs Divisor
+/// \return lhs modulo rhs
+template<std::integral T>
+constexpr T euclidean_mod(T lhs, T rhs) {
+  assert(rhs != 0);
+  T const m{lhs % rhs};
+  return std::unsigned_integral<T> ? m : m >= 0 ? m : m + std::abs(rhs);
+}
+
 /// Digit
 ///
 /// \tparam I             Digit

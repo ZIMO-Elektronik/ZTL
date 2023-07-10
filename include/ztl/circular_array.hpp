@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <type_traits>
 #include "limits.hpp"
+#include "math.hpp"
 
 namespace ztl {
 
@@ -66,7 +67,7 @@ struct circular_array {
     }
 
     constexpr iterator_& operator++() {
-      _i = static_cast<size_type>((_i + 1zu) % (I + 1zu));
+      _i = static_cast<size_type>((_i + 1uz) % (I + 1uz));
       return *this;
     }
 
@@ -92,37 +93,36 @@ struct circular_array {
     }
 
     constexpr iterator_ operator+(difference_type n) const {
-      return iterator_{_ptr, static_cast<size_type>((_i + n) % (I + 1uz))};
+      auto const i{euclidean_mod<difference_type>(_i + n, I + 1uz)};
+      return iterator_{_ptr, static_cast<size_type>(i)};
     }
 
     constexpr iterator_& operator+=(difference_type n) {
-      _i = static_cast<size_type>((_i + n) % (I + 1uz));
+      _i =
+        static_cast<size_type>(euclidean_mod<difference_type>(_i + n, I + 1uz));
       return *this;
     }
 
-    constexpr difference_type operator-(iterator_ const& rhs) const {
-      if (auto const diff{static_cast<difference_type>(_i - rhs._i)};
-          _ptr->_rd <= _ptr->_wr)
-        return diff;
+    difference_type operator-(iterator_ const& rhs) const {
+      if (auto const n{static_cast<difference_type>(_i - rhs._i)};
+          (_i >= _ptr->_rd && rhs._i >= _ptr->_rd) ||
+          (_i <= _ptr->_wr && rhs._i <= _ptr->_wr))
+        return n;
       else {
-        if (diff < 0) return diff + static_cast<difference_type>(I + 1uz);
-        else if (diff > 0) return diff - static_cast<difference_type>(I + 1uz);
+        if (n < 0) return n + static_cast<difference_type>(I + 1uz);
+        else if (n > 0) return n - static_cast<difference_type>(I + 1uz);
         else return 0;
       }
     }
 
     constexpr iterator_ operator-(difference_type n) const {
-      if constexpr (std::has_single_bit(I + 1uz))
-        return iterator_{_ptr, static_cast<size_type>((_i - n) % (I + 1uz))};
-      else
-        return iterator_{
-          _ptr, static_cast<size_type>(_i < n ? I + 1uz + _i - n : _i - n)};
+      auto const i{euclidean_mod<difference_type>(_i - n, I + 1uz)};
+      return iterator_{_ptr, static_cast<size_type>(i)};
     }
 
     constexpr iterator_& operator-=(difference_type n) {
-      if constexpr (std::has_single_bit(I + 1uz))
-        _i = static_cast<size_type>((_i - n) % (I + 1uz));
-      else _i = static_cast<size_type>(_i < n ? I + 1uz + _i - n : _i - n);
+      _i =
+        static_cast<size_type>(euclidean_mod<difference_type>(_i - n, I + 1uz));
       return *this;
     }
 
@@ -294,11 +294,13 @@ struct circular_array {
   constexpr void clear() { _rd = _wr = 0u; }
 
   // Non-member functions
-  friend constexpr auto operator<=>(circular_array const& lhs,
-                                    circular_array const& rhs) = default;
+  friend constexpr auto operator==(circular_array const& lhs,
+                                   circular_array const& rhs) {
+    return std::ranges::equal(lhs, rhs);
+  }
 
 private:
-  std::array<T, I + 1uz> _data;
+  std::array<T, I + 1uz> _data{};
   size_type _rd{};
   size_type _wr{};
 };
