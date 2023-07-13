@@ -1,16 +1,16 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/circular_array.hpp>
+#include <ztl/inplace_deque.hpp>
 
-TEST(circular_array, iterator_comparison) {
+TEST(inplace_deque, iterator_comparison) {
   {
-    ztl::circular_array<int, 5uz> c{1, 2, 3};
+    ztl::inplace_deque<int, 5uz> c{1, 2, 3};
     EXPECT_TRUE(cbegin(c) < cend(c));
     EXPECT_FALSE(cend(c) < cbegin(c));
   }
 
   {
-    ztl::circular_array<int, 5uz> c;
+    ztl::inplace_deque<int, 5uz> c;
     c.push_front(1);
     c.push_back(2);
     c.push_back(3);

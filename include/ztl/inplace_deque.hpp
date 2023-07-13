@@ -2,9 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-/// Circular array
+/// Inplace deque
 ///
-/// \file   ztl/circular_array.hpp
+/// \file   ztl/inplace_deque.hpp
 /// \author Vincent Hamp
 /// \date   12/11/2016
 
@@ -21,18 +21,18 @@
 
 namespace ztl {
 
-/// circular_array implements a ring array which holds I elements of type T.
-/// Push and pop can be used to add and remove elements from the front and back
-/// the same way. An equal read and write index signals, that the array is
-/// empty. If the array is full, the indices differ by one. This leads to the
-/// limitation that the array needs I + 1 elements of storage. There is a slight
+/// inplace_deque implements a double-ended queue which holds I elements of type
+/// T. Push and pop can be used to add and remove elements from the front and
+/// back the same way. An equal read and write index signals, that the queue is
+/// empty. If the queue is full, the indices differ by one. This leads to the
+/// limitation that the queue needs I + 1 elements of storage. There is a slight
 /// performance benefit of using sizes where I + 1 equals a power of 2 because
 /// of the use of modulo math.
 ///
 /// \tparam T Type of element
 /// \tparam I Size of container
 template<typename T, size_t I>
-struct circular_array {
+struct inplace_deque {
   template<bool Const>
   struct iterator_ {
     friend iterator_<true>;
@@ -44,12 +44,12 @@ struct circular_array {
     using reference = std::conditional_t<Const, T const&, T&>;
     using pointer = std::conditional_t<Const, T const*, T*>;
     using iterator_category = std::random_access_iterator_tag;
-    using circular_array_pointer =
-      std::conditional_t<Const, circular_array const*, circular_array*>;
+    using inplace_deque_pointer =
+      std::conditional_t<Const, inplace_deque const*, inplace_deque*>;
 
     // Construct/copy/destroy
     constexpr iterator_() = default;
-    constexpr iterator_(circular_array_pointer ptr, size_type i)
+    constexpr iterator_(inplace_deque_pointer ptr, size_type i)
       : _ptr{ptr}, _i{i} {}
     constexpr iterator_(iterator_ const&) = default;
     constexpr iterator_(iterator_<false> const& rhs) requires Const
@@ -157,7 +157,7 @@ struct circular_array {
     }
 
   private:
-    circular_array_pointer _ptr{};
+    inplace_deque_pointer _ptr{};
     size_type _i{};
   };
 
@@ -175,9 +175,9 @@ struct circular_array {
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   // Construct/copy/destroy
-  constexpr circular_array() = default;
+  constexpr inplace_deque() = default;
   template<std::convertible_to<T>... Ts>
-  constexpr circular_array(Ts&&... ts) requires(sizeof...(Ts) < I + 1uz)
+  constexpr inplace_deque(Ts&&... ts) requires(sizeof...(Ts) < I + 1uz)
     : _data{static_cast<T>(ts)...}, _wr{sizeof...(Ts)} {}
 
   // Iterators
@@ -288,8 +288,8 @@ struct circular_array {
   constexpr void clear() { _rd = _wr = 0u; }
 
   // Non-member functions
-  friend constexpr auto operator==(circular_array const& lhs,
-                                   circular_array const& rhs) {
+  friend constexpr auto operator==(inplace_deque const& lhs,
+                                   inplace_deque const& rhs) {
     return std::ranges::equal(lhs, rhs);
   }
 
@@ -300,76 +300,76 @@ private:
 };
 
 template<typename T, typename... Ts>
-circular_array(T&&, Ts&&...) -> circular_array<T, sizeof...(Ts) + 1uz>;
+inplace_deque(T&&, Ts&&...) -> inplace_deque<T, sizeof...(Ts) + 1uz>;
 
 // Iterators
 template<typename T, size_t I>
-constexpr auto begin(circular_array<T, I>& c) -> decltype(c.begin()) {
+constexpr auto begin(inplace_deque<T, I>& c) -> decltype(c.begin()) {
   return c.begin();
 }
 template<typename T, size_t I>
-constexpr auto begin(circular_array<T, I> const& c) -> decltype(c.begin()) {
+constexpr auto begin(inplace_deque<T, I> const& c) -> decltype(c.begin()) {
   return c.begin();
 }
 template<typename T, size_t I>
-constexpr auto end(circular_array<T, I>& c) -> decltype(c.end()) {
+constexpr auto end(inplace_deque<T, I>& c) -> decltype(c.end()) {
   return c.end();
 }
 template<typename T, size_t I>
-constexpr auto end(circular_array<T, I> const& c) -> decltype(c.end()) {
+constexpr auto end(inplace_deque<T, I> const& c) -> decltype(c.end()) {
   return c.end();
 }
 template<typename T, size_t I>
-constexpr auto rbegin(circular_array<T, I>& c) -> decltype(c.rbegin()) {
+constexpr auto rbegin(inplace_deque<T, I>& c) -> decltype(c.rbegin()) {
   return c.rbegin();
 }
 template<typename T, size_t I>
-constexpr auto rbegin(circular_array<T, I> const& c) -> decltype(c.rbegin()) {
+constexpr auto rbegin(inplace_deque<T, I> const& c) -> decltype(c.rbegin()) {
   return c.rbegin();
 }
 template<typename T, size_t I>
-constexpr auto rend(circular_array<T, I>& c) -> decltype(c.rend()) {
+constexpr auto rend(inplace_deque<T, I>& c) -> decltype(c.rend()) {
   return c.rend();
 }
 template<typename T, size_t I>
-constexpr auto rend(circular_array<T, I> const& c) -> decltype(c.rend()) {
+constexpr auto rend(inplace_deque<T, I> const& c) -> decltype(c.rend()) {
   return c.rend();
 }
 
 template<typename T, size_t I>
-constexpr auto cbegin(circular_array<T, I> const& c) -> decltype(c.begin()) {
+constexpr auto cbegin(inplace_deque<T, I> const& c) -> decltype(c.begin()) {
   return c.begin();
 }
 template<typename T, size_t I>
-constexpr auto cend(circular_array<T, I> const& c) -> decltype(c.end()) {
+constexpr auto cend(inplace_deque<T, I> const& c) -> decltype(c.end()) {
   return c.end();
 }
 template<typename T, size_t I>
-constexpr auto crbegin(circular_array<T, I> const& c) -> decltype(c.rbegin()) {
+constexpr auto crbegin(inplace_deque<T, I> const& c) -> decltype(c.rbegin()) {
   return c.rbegin();
 }
 template<typename T, size_t I>
-constexpr auto crend(circular_array<T, I> const& c) -> decltype(c.rend()) {
+constexpr auto crend(inplace_deque<T, I> const& c) -> decltype(c.rend()) {
   return c.rend();
 }
 
 // Capacity
 template<typename T, size_t I>
-[[nodiscard]] constexpr auto empty(circular_array<T, I> const& c)
+[[nodiscard]] constexpr auto empty(inplace_deque<T, I> const& c)
   -> decltype(c.empty()) {
   return c.empty();
 }
 template<typename T, size_t I>
-[[nodiscard]] constexpr auto full(circular_array<T, I> const& c)
+[[nodiscard]] constexpr auto full(inplace_deque<T, I> const& c)
   -> decltype(c.full()) {
   return c.full();
 }
 template<typename T, size_t I>
-constexpr auto size(circular_array<T, I> const& c) -> decltype(c.size()) {
+constexpr auto size(inplace_deque<T, I> const& c) -> decltype(c.size()) {
   return c.size();
 }
 template<typename T, size_t I>
-constexpr auto ssize(circular_array<T, I> const& c)
+constexpr auto ssize(inplace_deque<T, I> const& c)
   -> std::common_type_t<std::ptrdiff_t,
                         std::make_signed_t<decltype(c.size())>> {
   using R =

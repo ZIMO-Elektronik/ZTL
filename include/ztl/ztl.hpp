@@ -10,9 +10,7 @@
 
 #pragma once
 
-#include "array.hpp"
 #include "bits.hpp"
-#include "circular_array.hpp"
 #include "compilation_time.hpp"
 #include "counted_latch.hpp"
 #include "directional_latch.hpp"
@@ -22,6 +20,7 @@
 #include "fail.hpp"
 #include "fixed_string.hpp"
 #include "implicit_wrapper.hpp"
+#include "inplace_deque.hpp"
 #include "limits.hpp"
 #include "math.hpp"
 #include "meta.hpp"
@@ -29,6 +28,7 @@
 #include "overload.hpp"
 #include "spline.hpp"
 #include "static_list.hpp"
+#include "static_vector.hpp"
 #include "string.hpp"
 #include "system_error.hpp"
 #include "type_traits.hpp"

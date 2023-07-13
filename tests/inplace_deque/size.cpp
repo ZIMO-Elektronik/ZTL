@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/circular_array.hpp>
+#include <ztl/inplace_deque.hpp>
 
-TEST(circular_array, size) {
-  ztl::circular_array<int, 10uz> c;
+TEST(inplace_deque, size) {
+  ztl::inplace_deque<int, 10uz> c;
   EXPECT_EQ(0uz, size(c));
 
   c.push_back(42);
