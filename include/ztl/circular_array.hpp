@@ -104,15 +104,9 @@ struct circular_array {
     }
 
     difference_type operator-(iterator_ const& rhs) const {
-      if (auto const n{static_cast<difference_type>(_i - rhs._i)};
-          (_i >= _ptr->_rd && rhs._i >= _ptr->_rd) ||
-          (_i <= _ptr->_wr && rhs._i <= _ptr->_wr))
-        return n;
-      else {
-        if (n < 0) return n + static_cast<difference_type>(I + 1uz);
-        else if (n > 0) return n - static_cast<difference_type>(I + 1uz);
-        else return 0;
-      }
+      return _i + static_cast<difference_type>(I + 1uz) * (_i < _ptr->_rd) -
+             rhs._i -
+             static_cast<difference_type>(I + 1uz) * (rhs._i < _ptr->_rd);
     }
 
     constexpr iterator_ operator-(difference_type n) const {
