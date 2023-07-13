@@ -5,5 +5,5 @@
 TEST(math, digit) {
   EXPECT_EQ(ztl::tens_digit(225), 2);
   EXPECT_EQ(ztl::tens_digit(4238261u), 6u);
-  EXPECT_EQ(ztl::tens_digit(static_cast<uint64_t>(12813968329378591287u)), 8u);
+  EXPECT_EQ(ztl::tens_digit(12813968329378591287ull), 8u);
 }

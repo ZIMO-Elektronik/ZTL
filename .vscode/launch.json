@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/tests/ZTLTests",
       "args": [],
-      "stopAtEntry": true,
+      "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
