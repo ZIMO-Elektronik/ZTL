@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/circular_array.hpp>
+#include <ztl/inplace_deque.hpp>
 
-TEST(circular_array, iterator_arithmetic_addition) {
-  ztl::circular_array c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+TEST(inplace_deque, iterator_arithmetic_addition) {
+  ztl::inplace_deque c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   c.pop_front();
   c.push_back(10);
 
@@ -34,8 +34,8 @@ TEST(circular_array, iterator_arithmetic_addition) {
   EXPECT_EQ(*(it + 21), 0);
 }
 
-TEST(circular_array, iterator_arithmetic_negative_addition) {
-  ztl::circular_array<int, 10uz> c;
+TEST(inplace_deque, iterator_arithmetic_negative_addition) {
+  ztl::inplace_deque<int, 10uz> c;
   c.push_front(10);
   c.push_front(9);
   c.push_front(8);
@@ -75,8 +75,8 @@ TEST(circular_array, iterator_arithmetic_negative_addition) {
   EXPECT_EQ(*(it + -21), 9);
 }
 
-TEST(circular_array, iterator_arithmetic_subtraction) {
-  ztl::circular_array c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+TEST(inplace_deque, iterator_arithmetic_subtraction) {
+  ztl::inplace_deque c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   c.pop_front();
   c.push_back(10);
 
@@ -107,8 +107,8 @@ TEST(circular_array, iterator_arithmetic_subtraction) {
   EXPECT_EQ(*(it - 21), 2);
 }
 
-TEST(circular_array, iterator_arithmetic_negative_subtraction) {
-  ztl::circular_array<int, 10uz> c;
+TEST(inplace_deque, iterator_arithmetic_negative_subtraction) {
+  ztl::inplace_deque<int, 10uz> c;
   c.push_front(10);
   c.push_front(9);
   c.push_front(8);
@@ -154,8 +154,8 @@ TEST(circular_array, iterator_arithmetic_negative_subtraction) {
     EXPECT_EQ((b), (a) + ((b) - (a)));                                         \
   } while (0);
 
-TEST(circular_array, iterator_difference_read_index_less_or_equal_write_index) {
-  ztl::circular_array c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+TEST(inplace_deque, iterator_difference_read_index_less_or_equal_write_index) {
+  ztl::inplace_deque c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   c.pop_front();
   c.push_back(10);
   c.pop_back();
@@ -208,8 +208,8 @@ TEST(circular_array, iterator_difference_read_index_less_or_equal_write_index) {
   EXPECT_EQ(it - 8, begin(c));
 }
 
-TEST(circular_array, iterator_difference_read_index_greater_write_index) {
-  ztl::circular_array<int, 10uz> c;
+TEST(inplace_deque, iterator_difference_read_index_greater_write_index) {
+  ztl::inplace_deque<int, 10uz> c;
   c.push_front(10);
   c.push_front(9);
   c.push_front(8);

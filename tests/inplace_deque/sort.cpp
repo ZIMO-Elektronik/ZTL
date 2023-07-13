@@ -1,17 +1,17 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/circular_array.hpp>
+#include <ztl/inplace_deque.hpp>
 
-TEST(circular_array, sort) {
+TEST(inplace_deque, sort) {
   {
-    ztl::circular_array values{2, 10, 4, 5, 1, 7, 8, 9, 3, 6};
+    ztl::inplace_deque values{2, 10, 4, 5, 1, 7, 8, 9, 3, 6};
     std::ranges::sort(values);
-    constexpr ztl::circular_array expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    constexpr ztl::inplace_deque expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     EXPECT_EQ(values, expected);
   }
 
   {
-    ztl::circular_array<int, 10uz> values;
+    ztl::inplace_deque<int, 10uz> values;
     values.push_back(2);
     values.push_back(10);
     values.push_back(4);
@@ -23,7 +23,7 @@ TEST(circular_array, sort) {
     values.push_front(9);
     values.push_front(8);
     std::ranges::sort(values);
-    constexpr ztl::circular_array expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    constexpr ztl::inplace_deque expected{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     EXPECT_EQ(values, expected);
   }
 }

@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <ztl/ztl.hpp>
 
 int main(int argc, char* argv[]) {
   testing::InitGoogleTest(&argc, argv);

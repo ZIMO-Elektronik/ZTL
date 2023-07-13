@@ -1,10 +1,10 @@
 # Changelog
 
 ##
-- Add static_vector
-- circular_array
-  - Calling modifiers may cause UB
-  - Calling element access if empty causes UB
+- Add inplace_vector
+- Rename circular_array to inplace_deque and change behavior of
+  - Modifiers may cause UB
+  - Element access if empty causes UB
   - Remove ssize method
 - Remove array header
 

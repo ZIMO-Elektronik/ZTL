@@ -1,10 +1,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/circular_array.hpp>
+#include <ztl/inplace_deque.hpp>
 
-TEST(circular_array, iterator_decrement) {
+TEST(inplace_deque, iterator_decrement) {
   {
-    ztl::circular_array c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    ztl::inplace_deque c{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     c.pop_front();
     c.push_back(10);
 
@@ -24,7 +24,7 @@ TEST(circular_array, iterator_decrement) {
   }
 
   {
-    ztl::circular_array c{0, 1, 2, 3, 4, 5, 6};
+    ztl::inplace_deque c{0, 1, 2, 3, 4, 5, 6};
     c.pop_front();
     c.push_back(7);
 

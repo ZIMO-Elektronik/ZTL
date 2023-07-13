@@ -8,9 +8,6 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
 - bits.hpp  
   Various constexpr functions for bitmasking things
 
-- circular_array.hpp  
-  Stack allocated ring-buffer which push- and pop functions for front and back
-
 - compilation_time.hpp  
   Compiletime stamps from \_\_DATE\_\_ and \_\_TIME\_\_ macros
   
@@ -38,6 +35,12 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
 - implicit_wrapper.hpp  
   Like explicit_wrapper, but allows implicit conversions back to its underlying type
 
+- inplace_deque.hpp  
+  Stack allocated double-ended queue which push- and pop functions for front and back
+
+- inplace_vector.hpp  
+  Incomplete implementation of std::inplace_vector proposal [P0843r6](https://isocpp.org/files/papers/P0843R8.html)
+
 - limits.hpp  
   Minimal representation of signed- or unsigned integral types within given interval
 
@@ -58,9 +61,6 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
 
 - static_list.hpp  
   Doubly linked list which manages externally created nodes
-
-- static_vector.hpp  
-  Incomplete implementation of std::static_vector proposal [P0843r6](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p0843r6.html)
 
 - string.hpp  
   Constexpr implementations of atoi, strcmp, strlen

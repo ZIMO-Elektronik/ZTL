@@ -2,9 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-/// Static vector
+/// Inplace vector
 ///
-/// \file   ztl/static_vector.hpp
+/// \file   ztl/inplace_vector.hpp
 /// \author Vincent Hamp
 /// \date   10/07/2023
 
@@ -17,8 +17,14 @@
 
 namespace ztl {
 
+/// Modernized version of boost::static_vector<T, Capacity>
+///
+/// https://isocpp.org/files/papers/P0843R8.html
+///
+/// \tparam T Type of element
+/// \tparam I Size of container
 template<typename T, size_t I>
-struct static_vector {
+struct inplace_vector {
   // Types
   using value_type = T;
   using size_type = ztl::smallest_unsigned_t<I>;
@@ -33,9 +39,9 @@ struct static_vector {
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   // Construct/copy/destroy
-  constexpr static_vector() = default;
+  constexpr inplace_vector() = default;
   template<std::convertible_to<T>... Ts>
-  constexpr static_vector(Ts&&... ts) requires(sizeof...(Ts) <= I)
+  constexpr inplace_vector(Ts&&... ts) requires(sizeof...(Ts) <= I)
     : _data{static_cast<T>(ts)...}, _size{sizeof...(Ts)} {}
 
   // Iterators
@@ -100,30 +106,10 @@ struct static_vector {
     --_size;
   }
   constexpr void clear() { resize(0uz); }
-  template<size_t J>
-  constexpr auto& get() & {
-    if constexpr (J == 0uz) return _data;
-    else if constexpr (J == 1uz) return _size;
-  }
-  template<size_t J>
-  constexpr auto const& get() const& {
-    if constexpr (J == 0uz) return _data;
-    else if constexpr (J == 1uz) return _size;
-  }
-  template<size_t J>
-  constexpr auto&& get() && {
-    if constexpr (J == 0uz) return std::move(_data);
-    else if constexpr (J == 1uz) return std::move(_size);
-  }
-  template<size_t J>
-  constexpr auto const&& get() const&& {
-    if constexpr (J == 0uz) return std::move(_data);
-    else if constexpr (J == 1uz) return std::move(_size);
-  }
 
   // Non-member functions
-  friend constexpr auto operator<=>(static_vector const& lhs,
-                                    static_vector const& rhs) = default;
+  friend constexpr auto operator<=>(inplace_vector const& lhs,
+                                    inplace_vector const& rhs) = default;
 
 private:
   std::array<value_type, I> _data{};
@@ -131,76 +117,76 @@ private:
 };
 
 template<typename T, typename... Ts>
-static_vector(T&&, Ts&&...) -> static_vector<T, sizeof...(Ts) + 1uz>;
+inplace_vector(T&&, Ts&&...) -> inplace_vector<T, sizeof...(Ts) + 1uz>;
 
 // Iterators
 template<typename T, size_t I>
-constexpr auto begin(static_vector<T, I>& c) -> decltype(c.begin()) {
+constexpr auto begin(inplace_vector<T, I>& c) -> decltype(c.begin()) {
   return c.begin();
 }
 template<typename T, size_t I>
-constexpr auto begin(static_vector<T, I> const& c) -> decltype(c.begin()) {
+constexpr auto begin(inplace_vector<T, I> const& c) -> decltype(c.begin()) {
   return c.begin();
 }
 template<typename T, size_t I>
-constexpr auto end(static_vector<T, I>& c) -> decltype(c.end()) {
+constexpr auto end(inplace_vector<T, I>& c) -> decltype(c.end()) {
   return c.end();
 }
 template<typename T, size_t I>
-constexpr auto end(static_vector<T, I> const& c) -> decltype(c.end()) {
+constexpr auto end(inplace_vector<T, I> const& c) -> decltype(c.end()) {
   return c.end();
 }
 template<typename T, size_t I>
-constexpr auto rbegin(static_vector<T, I>& c) -> decltype(c.rbegin()) {
+constexpr auto rbegin(inplace_vector<T, I>& c) -> decltype(c.rbegin()) {
   return c.rbegin();
 }
 template<typename T, size_t I>
-constexpr auto rbegin(static_vector<T, I> const& c) -> decltype(c.rbegin()) {
+constexpr auto rbegin(inplace_vector<T, I> const& c) -> decltype(c.rbegin()) {
   return c.rbegin();
 }
 template<typename T, size_t I>
-constexpr auto rend(static_vector<T, I>& c) -> decltype(c.rend()) {
+constexpr auto rend(inplace_vector<T, I>& c) -> decltype(c.rend()) {
   return c.rend();
 }
 template<typename T, size_t I>
-constexpr auto rend(static_vector<T, I> const& c) -> decltype(c.rend()) {
+constexpr auto rend(inplace_vector<T, I> const& c) -> decltype(c.rend()) {
   return c.rend();
 }
 
 template<typename T, size_t I>
-constexpr auto cbegin(static_vector<T, I> const& c) -> decltype(c.begin()) {
+constexpr auto cbegin(inplace_vector<T, I> const& c) -> decltype(c.begin()) {
   return c.begin();
 }
 template<typename T, size_t I>
-constexpr auto cend(static_vector<T, I> const& c) -> decltype(c.end()) {
+constexpr auto cend(inplace_vector<T, I> const& c) -> decltype(c.end()) {
   return c.end();
 }
 template<typename T, size_t I>
-constexpr auto crbegin(static_vector<T, I> const& c) -> decltype(c.rbegin()) {
+constexpr auto crbegin(inplace_vector<T, I> const& c) -> decltype(c.rbegin()) {
   return c.rbegin();
 }
 template<typename T, size_t I>
-constexpr auto crend(static_vector<T, I> const& c) -> decltype(c.rend()) {
+constexpr auto crend(inplace_vector<T, I> const& c) -> decltype(c.rend()) {
   return c.rend();
 }
 
 // Capacity
 template<typename T, size_t I>
-[[nodiscard]] constexpr auto empty(static_vector<T, I> const& c)
+[[nodiscard]] constexpr auto empty(inplace_vector<T, I> const& c)
   -> decltype(c.empty()) {
   return c.empty();
 }
 template<typename T, size_t I>
-[[nodiscard]] constexpr auto full(static_vector<T, I> const& c)
+[[nodiscard]] constexpr auto full(inplace_vector<T, I> const& c)
   -> decltype(c.full()) {
   return c.full();
 }
 template<typename T, size_t I>
-constexpr auto size(static_vector<T, I> const& c) -> decltype(c.size()) {
+constexpr auto size(inplace_vector<T, I> const& c) -> decltype(c.size()) {
   return c.size();
 }
 template<typename T, size_t I>
-constexpr auto ssize(static_vector<T, I> const& c)
+constexpr auto ssize(inplace_vector<T, I> const& c)
   -> std::common_type_t<std::ptrdiff_t,
                         std::make_signed_t<decltype(c.size())>> {
   using R =
@@ -209,19 +195,3 @@ constexpr auto ssize(static_vector<T, I> const& c)
 }
 
 }  // namespace ztl
-
-namespace std {
-
-template<typename T, size_t I>
-struct tuple_size<::ztl::static_vector<T, I>>
-  : std::integral_constant<size_t, 2uz> {};
-
-template<typename T, size_t I, size_t J>
-struct tuple_element<J, ::ztl::static_vector<T, I>> {
-  using type =
-    std::conditional_t<J == 0uz,
-                       std::array<T, I>,
-                       typename ::ztl::static_vector<T, I>::size_type>;
-};
-
-}  // namespace std

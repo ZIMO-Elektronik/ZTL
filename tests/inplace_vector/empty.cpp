@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <ztl/static_vector.hpp>
+#include <ztl/inplace_vector.hpp>
 
-TEST(static_vector, empty) {
-  ztl::static_vector<int, 3uz> c;
+TEST(inplace_vector, empty) {
+  ztl::inplace_vector<int, 3uz> c;
   EXPECT_TRUE(c.empty());
 
   c.push_back(5);

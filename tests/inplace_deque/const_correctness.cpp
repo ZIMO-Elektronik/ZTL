@@ -2,17 +2,17 @@
 #include <gtest/gtest.h>
 #include <algorithm>
 #include <numeric>
-#include <ztl/circular_array.hpp>
+#include <ztl/inplace_deque.hpp>
 
 struct S {
   void add(int value) { _ca.push_back(value); }
   int sum() const { return std::accumulate(cbegin(_ca), cend(_ca), 0); }
 
 private:
-  ztl::circular_array<int, 10uz> _ca;
+  ztl::inplace_deque<int, 10uz> _ca;
 };
 
-TEST(circular_array, const_correctness) {
+TEST(inplace_deque, const_correctness) {
   S s;
   s.add(1);
   s.add(2);
