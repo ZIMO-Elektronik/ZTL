@@ -100,26 +100,6 @@ struct static_vector {
     --_size;
   }
   constexpr void clear() { resize(0uz); }
-  template<size_t J>
-  constexpr auto& get() & {
-    if constexpr (J == 0uz) return _data;
-    else if constexpr (J == 1uz) return _size;
-  }
-  template<size_t J>
-  constexpr auto const& get() const& {
-    if constexpr (J == 0uz) return _data;
-    else if constexpr (J == 1uz) return _size;
-  }
-  template<size_t J>
-  constexpr auto&& get() && {
-    if constexpr (J == 0uz) return std::move(_data);
-    else if constexpr (J == 1uz) return std::move(_size);
-  }
-  template<size_t J>
-  constexpr auto const&& get() const&& {
-    if constexpr (J == 0uz) return std::move(_data);
-    else if constexpr (J == 1uz) return std::move(_size);
-  }
 
   // Non-member functions
   friend constexpr auto operator<=>(static_vector const& lhs,
@@ -209,19 +189,3 @@ constexpr auto ssize(static_vector<T, I> const& c)
 }
 
 }  // namespace ztl
-
-namespace std {
-
-template<typename T, size_t I>
-struct tuple_size<::ztl::static_vector<T, I>>
-  : std::integral_constant<size_t, 2uz> {};
-
-template<typename T, size_t I, size_t J>
-struct tuple_element<J, ::ztl::static_vector<T, I>> {
-  using type =
-    std::conditional_t<J == 0uz,
-                       std::array<T, I>,
-                       typename ::ztl::static_vector<T, I>::size_type>;
-};
-
-}  // namespace std
