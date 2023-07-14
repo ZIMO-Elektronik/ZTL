@@ -6,6 +6,7 @@
   - Modifiers may cause UB
   - Element access if empty causes UB
   - Remove ssize method
+  - Add resize method
 - Remove array header
 
 ## 0.16.2
