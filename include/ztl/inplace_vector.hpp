@@ -198,4 +198,14 @@ constexpr auto ssize(inplace_vector<T, I> const& c)
   return static_cast<R>(c.size());
 }
 
+// Data access
+template<typename T, size_t I>
+constexpr auto data(inplace_vector<T, I>& c) -> decltype(c.data()) {
+  return c.data();
+}
+template<typename T, size_t I>
+constexpr auto data(inplace_vector<T, I> const& c) -> decltype(c.data()) {
+  return c.data();
+}
+
 }  // namespace ztl

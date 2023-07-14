@@ -1,6 +1,6 @@
 # Changelog
 
-##
+## 0.17.0
 - Add inplace_vector
 - Rename circular_array to inplace_deque and change behavior of
   - Modifiers may cause UB
