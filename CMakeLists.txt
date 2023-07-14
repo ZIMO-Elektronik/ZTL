@@ -4,7 +4,7 @@ include(FetchContent)
 FetchContent_Declare(
   CMakeModules
   GIT_REPOSITORY https://github.com/ZIMO-Elektronik/CMakeModules
-  GIT_TAG v0.0.7
+  GIT_TAG v0.1.0
   SOURCE_DIR ${CMAKE_BINARY_DIR}/CMakeModules)
 FetchContent_MakeAvailable(CMakeModules)
 
@@ -24,6 +24,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 else()
   target_include_directories(ZTL SYSTEM INTERFACE include)
 endif()
+
+target_common_warnings(ZTL INTERFACE)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   include(CTest)
