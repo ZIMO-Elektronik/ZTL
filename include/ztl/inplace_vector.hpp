@@ -101,6 +101,10 @@ struct inplace_vector {
     assert(!full());
     _data[_size++] = std::move(value);
   }
+  [[deprecated]] constexpr void push_back() {
+    assert(!full());
+    ++_size;
+  }
   constexpr void pop_back() {
     assert(!empty());
     --_size;

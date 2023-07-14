@@ -208,6 +208,15 @@ struct inplace_deque {
   }
   constexpr size_type max_size() const { return I; }
   constexpr size_type capacity() const { return I; }
+  constexpr void resize(size_type count) {
+    assert(count <= I);
+    _wr = static_cast<size_type>((_rd + count) % (I + 1uz));
+  }
+  constexpr void resize(size_type count, T const& value) {
+    assert(count <= I);
+    resize(count);
+    std::fill_n(begin(), count, value);
+  }
 
   // Element access
   constexpr reference operator[](size_type i) {
@@ -242,11 +251,6 @@ struct inplace_deque {
   constexpr const_pointer data() const { return std::data(_data); }
 
   // Modifiers
-  constexpr void push_front() {
-    assert(!full());
-    if constexpr (std::has_single_bit(I + 1uz)) _rd = (_rd - 1) % (I + 1uz);
-    else _rd = _rd ? _rd - 1 : I;
-  }
   constexpr void push_front(value_type const& value) {
     assert(!full());
     if constexpr (std::has_single_bit(I + 1uz))
@@ -261,13 +265,14 @@ struct inplace_deque {
     else _rd = static_cast<size_type>(_rd ? _rd - 1uz : I);
     _data[_rd] = std::move(value);
   }
+  [[deprecated]] constexpr void push_front() {
+    assert(!full());
+    if constexpr (std::has_single_bit(I + 1uz)) _rd = (_rd - 1) % (I + 1uz);
+    else _rd = _rd ? _rd - 1 : I;
+  }
   constexpr void pop_front() {
     assert(!empty());
     _rd = static_cast<size_type>((_rd + 1uz) % (I + 1uz));
-  }
-  constexpr void push_back() {
-    assert(!full());
-    _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
   constexpr void push_back(value_type const& value) {
     assert(!full());
@@ -277,6 +282,10 @@ struct inplace_deque {
   constexpr void push_back(value_type&& value) {
     assert(!full());
     _data[_wr] = std::move(value);
+    _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
+  }
+  [[deprecated]] constexpr void push_back() {
+    assert(!full());
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
   constexpr void pop_back() {

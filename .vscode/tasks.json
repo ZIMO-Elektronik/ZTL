@@ -11,7 +11,7 @@
       "label": "CMake ZTLTests Clang",
       "type": "shell",
       "isBackground": true,
-      "command": "cmake -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=CMakeModules/toolchains/clang.cmake -DCMAKE_BUILD_TYPE=Debug"
+      "command": "cmake -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=CMakeModules/src/toolchains/clang.cmake -DCMAKE_BUILD_TYPE=Debug"
     },
     {
       "label": "Ninja ZTLTests",
