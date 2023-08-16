@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.18.0
+- Update to CMakeModules 0.2.0
+
 ## 0.17.0
 - Add inplace_vector
 - Rename circular_array to inplace_deque and change behavior of
