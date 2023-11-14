@@ -28,7 +28,7 @@ struct fixed_string {
 
   constexpr char const* c_str() const { return data(_str); }
 
-  constexpr auto operator[](size_t i) const { return _str[i]; };
+  constexpr auto operator[](size_t i) const { return _str[i]; }
 
   std::array<char, I + 1uz> _str{};
 };
@@ -47,8 +47,7 @@ constexpr auto operator+(fixed_string<I> const& lhs,
   return [&]<size_t... Is, size_t... Js>(std::index_sequence<Is...>,
                                          std::index_sequence<Js...>) {
     return fixed_string{{lhs[Is]..., rhs[Js]...}};
-  }
-  (std::make_index_sequence<I>{}, std::make_index_sequence<J + 1uz>{});
+  }(std::make_index_sequence<I>{}, std::make_index_sequence<J + 1uz>{});
 }
 
 }  // namespace ztl

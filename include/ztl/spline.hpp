@@ -37,8 +37,8 @@ struct spline {
 /// \return Array of splines
 template<std::floating_point T, size_t I>
 requires(I >= 3uz)
-constexpr std::array<spline<T>, I - 1uz> make_hermite_splines(
-  std::array<T, I> const& x, std::array<T, I> const& y) {
+constexpr std::array<spline<T>, I - 1uz>
+make_hermite_splines(std::array<T, I> const& x, std::array<T, I> const& y) {
   std::array<spline<T>, I - 1uz> splines{};
   std::array<T, I - 1uz> h{};
   std::array<T, I> del{};
@@ -99,11 +99,11 @@ constexpr std::array<spline<T>, I - 1uz> make_hermite_splines(
 /// \return Interpolated y
 template<std::floating_point T, size_t I, size_t J>
 requires(I >= 3uz)
-constexpr std::array<T, J> eval_hermite_splines(
-  std::array<T, I> const& x,
-  std::array<T, I> const& y,
-  std::array<T, J> const& sx,
-  std::array<spline<T>, I - 1u> const& splines) {
+constexpr std::array<T, J>
+eval_hermite_splines(std::array<T, I> const& x,
+                     std::array<T, I> const& y,
+                     std::array<T, J> const& sx,
+                     std::array<spline<T>, I - 1u> const& splines) {
   std::array<T, J> sy{};
   size_t count{};
 

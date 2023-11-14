@@ -63,8 +63,7 @@ constexpr T lerp(T x, T x1, T x2, T y1, T y2) {
 /// \return 2^n
 constexpr uint32_t pow2(uint32_t value) {
   uint32_t result{1u};
-  for (uint32_t i{0u}; i < value; ++i)
-    result <<= 1u;
+  for (uint32_t i{0u}; i < value; ++i) result <<= 1u;
   return result;
 }
 

@@ -22,8 +22,7 @@ namespace ztl {
 /// \param  str Pointer to the null-terminated byte string to be interpreted
 /// \return Integer value corresponding to the contents of str
 constexpr int32_t atoi(char const* str) {
-  while (*str == ' ')
-    ++str;
+  while (*str == ' ') ++str;
 
   int32_t retval{0};
   int32_t sign{1};
@@ -76,8 +75,7 @@ constexpr char* strncpy(char* dest, char const* src, size_t count) {
   for (auto i{0uz}; i < count; ++i)
     if (src[i]) dest[i] = src[i];
     else {
-      while (i < count)
-        dest[i++] = '\0';
+      while (i < count) dest[i++] = '\0';
       break;
     }
   return dest;
@@ -89,8 +87,7 @@ constexpr char* strncpy(char* dest, char const* src, size_t count) {
 /// \return Length of the C string str
 constexpr size_t strlen(char const* str) {
   size_t retval{};
-  while (str[retval])
-    ++retval;
+  while (str[retval]) ++retval;
   return retval;
 }
 
