@@ -4,7 +4,7 @@ include(FetchContent)
 FetchContent_Declare(
   CMakeModules
   GIT_REPOSITORY https://github.com/ZIMO-Elektronik/CMakeModules
-  GIT_TAG v0.2.1
+  GIT_TAG v0.3.0
   SOURCE_DIR ${CMAKE_BINARY_DIR}/CMakeModules)
 FetchContent_MakeAvailable(CMakeModules)
 
@@ -32,6 +32,12 @@ target_common_warnings(ZTL INTERFACE)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   include(CTest)
+  file(
+    DOWNLOAD
+    https://raw.githubusercontent.com/ZIMO-Elektronik/.clang-format/master/.clang-format
+    ${CMAKE_CURRENT_LIST_DIR}/.clang-format)
+  file(GLOB_RECURSE SRC include/*.*pp tests/*.*pp)
+  add_clang_format_target(ZTLFormat OPTIONS -i FILES ${SRC})
 endif()
 
 if(BUILD_TESTING

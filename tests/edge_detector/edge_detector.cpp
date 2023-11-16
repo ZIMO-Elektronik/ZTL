@@ -4,21 +4,21 @@
 
 TEST(edge_detector, ctor) {
   {
-    ztl::EdgeDetector edge_detector{false};
-    EXPECT_EQ(edge_detector(true), ztl::EdgeDetector::Rising);
+    ztl::edge_detector ed{false};
+    EXPECT_EQ(ed(true), ztl::edge_detector::Rising);
   }
 
   {
-    ztl::EdgeDetector edge_detector{true};
-    EXPECT_EQ(edge_detector(false), ztl::EdgeDetector::Falling);
+    ztl::edge_detector ed{true};
+    EXPECT_EQ(ed(false), ztl::edge_detector::Falling);
   }
 }
 
 TEST(edge_detector, function_call) {
-  ztl::EdgeDetector edge_detector;
-  EXPECT_EQ(edge_detector(false), ztl::EdgeDetector::None);
-  EXPECT_EQ(edge_detector(true), ztl::EdgeDetector::Rising);
-  EXPECT_EQ(edge_detector(true), ztl::EdgeDetector::None);
-  EXPECT_EQ(edge_detector(false), ztl::EdgeDetector::Falling);
-  EXPECT_EQ(edge_detector(false), ztl::EdgeDetector::None);
+  ztl::edge_detector ed;
+  EXPECT_EQ(ed(false), ztl::edge_detector::None);
+  EXPECT_EQ(ed(true), ztl::edge_detector::Rising);
+  EXPECT_EQ(ed(true), ztl::edge_detector::None);
+  EXPECT_EQ(ed(false), ztl::edge_detector::Falling);
+  EXPECT_EQ(ed(false), ztl::edge_detector::None);
 }

@@ -3,6 +3,8 @@ include(GoogleTest)
 file(GLOB_RECURSE SRC *.cpp)
 add_executable(ZTLTests ${SRC})
 
+sanitize("address,undefined")
+
 target_common_warnings(ZTLTests PRIVATE)
 
 cpmaddpackage("gh:google/googletest#main")

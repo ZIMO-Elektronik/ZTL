@@ -18,7 +18,10 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
   Stack allocated container for string
 
 - directional_latch  
-  Latches it_s value after it hasn't changed direction for at least I times
+  Latches it's value after it hasn't changed direction for at least I times
+
+- edge_detector
+  Detects rising and falling edges
 
 - enum.hpp  
   Operator overloads for enum classes enabled by specializing a struct
@@ -39,7 +42,7 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
   Stack allocated double-ended queue which push- and pop functions for front and back
 
 - inplace_vector.hpp  
-  Incomplete implementation of std::inplace_vector proposal [P0843r6](https://isocpp.org/files/papers/P0843R8.html)
+  Incomplete implementation of `std::inplace_vector` proposal [P0843r6](https://isocpp.org/files/papers/P0843R8.html)
 
 - limits.hpp  
   Minimal representation of signed- or unsigned integral types within given interval
@@ -66,13 +69,13 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
   Constexpr implementations of atoi, strcmp, strlen
 
 - system_error.hpp  
-  Basically std::error_code without enforcing inheritance of std::error_category
+  Basically `std::error_code` without enforcing inheritance of `std::error_category`
 
 - type_traits.hpp  
-  Many non-standard additions to <type_traits>
+  Many non-standard additions to `<type_traits>`
 
 - units.hpp  
   User-defined literals for some physical units (e.g. Hz or ms)
   
 - utility.hpp  
-  Variable templates and operator overloads for std::integral_constant and make_index_sequence_from_to
+  Variable templates and operator overloads for `std::integral_constant` and `make_index_sequence_from_to`

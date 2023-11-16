@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <cassert>
 #include "type_traits.hpp"
 #include "utility.hpp"
 
