@@ -14,14 +14,14 @@ namespace ztl {
 
 /// Detect rising and falling edges
 struct edge_detector {
-  enum Polarity { None, Rising, Falling };
+  enum transition { none, rising, falling };
 
   constexpr edge_detector() = default;
   explicit constexpr edge_detector(bool value) : _value{value} {}
 
-  [[nodiscard]] constexpr Polarity operator()(bool value) {
-    if (value == _value) return None;
-    return (_value = value) ? Rising : Falling;
+  [[nodiscard]] constexpr transition operator()(bool value) {
+    if (value == _value) return none;
+    return (_value = value) ? rising : falling;
   }
 
 private:
