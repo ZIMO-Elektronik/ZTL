@@ -21,6 +21,6 @@ cpmaddpackage(
   OPTIONS
   "INSTALL_GTEST OFF")
 
-target_link_libraries(ZTLTests PRIVATE ZTL::ZTL GTest::gtest GTest::gmock)
+target_link_libraries(ZTLTests PRIVATE ZTL::ZTL GTest::gtest_main GTest::gmock)
 
 gtest_discover_tests(ZTLTests)

@@ -180,7 +180,7 @@ using make_index_sequence_from_to = make_integer_sequence_from_to<size_t, I, J>;
 /// \param  std::index_sequenc<Is...> Index sequence
 /// \return Mask
 template<size_t... Is>
-constexpr uint32_t index_sequence2mask(std::index_sequence<Is...>) {
+consteval uint32_t index_sequence2mask(std::index_sequence<Is...>) {
   if constexpr (!sizeof...(Is)) return 0u;
   else return ((1u << Is) | ...);
 }

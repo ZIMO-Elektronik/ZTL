@@ -29,9 +29,9 @@ struct compilation_time {
 /// Get compilation date and time
 ///
 /// \return Compilation time
-constexpr compilation_time make_compilation_time() {
+consteval compilation_time make_compilation_time() {
   compilation_time ct{};
-  ct.day = atoi(__DATE__ + 3u);
+  ct.day = atoi(__DATE__ + 3);
   if (!strcmp(__DATE__, "Jan")) ct.month = 1u;
   else if (!strcmp(__DATE__, "Feb")) ct.month = 2u;
   else if (!strcmp(__DATE__, "Mar")) ct.month = 3u;
@@ -44,10 +44,10 @@ constexpr compilation_time make_compilation_time() {
   else if (!strcmp(__DATE__, "Oct")) ct.month = 10u;
   else if (!strcmp(__DATE__, "Nov")) ct.month = 11u;
   else if (!strcmp(__DATE__, "Dec")) ct.month = 12u;
-  ct.year = atoi(__DATE__ + 6u);
+  ct.year = atoi(__DATE__ + 6);
   ct.hour = atoi(__TIME__);
-  ct.minute = atoi(__TIME__ + 3u);
-  ct.second = atoi(__TIME__ + 6u);
+  ct.minute = atoi(__TIME__ + 3);
+  ct.second = atoi(__TIME__ + 6);
   return ct;
 }
 
@@ -55,7 +55,7 @@ constexpr compilation_time make_compilation_time() {
 ///
 /// \param  ct  Compilation time to convert
 /// \return Compilation time in seconds
-constexpr size_t compilation_time2seconds(compilation_time ct) {
+consteval size_t compilation_time2seconds(compilation_time ct) {
   auto count_leap_years{[&ct]() {
     size_t retval{ct.year};
     if (ct.month <= 2u) --retval;
@@ -95,7 +95,7 @@ inline constexpr compilation_time default_epoch{
 /// \tparam epoch Epoch to use
 /// \return Unix compilation time since epoch
 template<typename T = time_t>
-constexpr T make_unix_compilation_time(compilation_time epoch = default_epoch) {
+consteval T make_unix_compilation_time(compilation_time epoch = default_epoch) {
   return static_cast<T>(compilation_time2seconds(make_compilation_time()) -
                         compilation_time2seconds(epoch));
 }
