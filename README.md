@@ -1,6 +1,6 @@
 # ZTL
 
-[![build](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/build.yml/badge.svg)](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/build.yml) [![tests](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/tests.yml/badge.svg)](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/tests.yml)
+[![build](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/build.yml/badge.svg)](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/build.yml) [![tests](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/tests.yml/badge.svg)](https://github.com/ZIMO-Elektronik/ZTL/actions/workflows/tests.yml) [![license](https://img.shields.io/github/license/ZIMO-Elektronik/ZTL)](https://github.com/ZIMO-Elektronik/ZTL/raw/master/LICENSE)
 
 <img src="data/images/logo.png" width="20%" align="right"/>
 
