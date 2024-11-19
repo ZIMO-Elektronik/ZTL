@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.19.1
+- Bugfix CMake always includes tests
+
 ## 0.19.0
 - Rename `EdgeDetector` to `edge_detector`
 - Add missing `<cassert>`
