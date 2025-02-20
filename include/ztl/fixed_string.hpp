@@ -50,4 +50,4 @@ constexpr auto operator+(fixed_string<I> const& lhs,
   }(std::make_index_sequence<I>{}, std::make_index_sequence<J + 1uz>{});
 }
 
-}  // namespace ztl
+} // namespace ztl

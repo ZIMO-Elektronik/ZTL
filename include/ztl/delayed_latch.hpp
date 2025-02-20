@@ -2,14 +2,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-/// Directional latch
+/// Delayed latch
 ///
-/// \file   ztl/directional_latch.hpp
+/// \file   ztl/delayed_latch.hpp
 /// \author Vincent Hamp
-/// \date   25/03/2021
+/// \date   20/02/2025
 
 #pragma once
 
+#include <chrono>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -18,33 +19,34 @@
 
 namespace ztl {
 
-/// Latches T after it hasn't changed direction for at least I times
+/// Latches T after it was set for at least I times
 ///
 /// \tparam T Type of latch
 /// \tparam I Times to latch
-template<std::totally_ordered T, size_t I>
-struct directional_latch {
+template<std::equality_comparable T, size_t I>
+struct delayed_latch {
   using value_type = T;
 
   /// Default ctor
-  constexpr directional_latch() = default;
+  constexpr delayed_latch() = default;
 
   /// Ctor
   ///
   /// \param  value Initial value
-  constexpr directional_latch(value_type const& value) : _value{value} {}
+  constexpr delayed_latch(value_type const& value)
+    : _value{value}, _next_value{value} {}
 
   /// Set latch
   ///
   /// \param  value Next value
   void set(value_type const& value) {
-    if ((value == _value) || (_less && value > _value) ||
-        (!_less && value < _value))
+    if (_next_value != value) {
       reset();
-    if (!_count) _less = value < _value;
+      _next_value = value;
+    }
     if (++_count < I) return;
     reset();
-    _value = value;
+    _value = _next_value;
   }
 
   /// Reset latch
@@ -55,7 +57,7 @@ struct directional_latch {
   /// \param  value Reset value
   void reset(value_type const& value) {
     reset();
-    _value = value;
+    _value = _next_value = value;
   }
 
   constexpr value_type const& value() const& { return _value; }
@@ -66,8 +68,8 @@ struct directional_latch {
 
 private:
   T _value{};
+  T _next_value{};
   smallest_unsigned_t<I> _count{};
-  bool _less{};
 };
 
 } // namespace ztl

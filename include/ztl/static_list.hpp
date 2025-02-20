@@ -24,7 +24,7 @@ struct link {
   link* prev{nullptr};
 };
 
-}  // namespace detail
+} // namespace detail
 
 /// node implementation
 ///
@@ -200,4 +200,4 @@ private:
 template<typename T>
 detail::link static_list<T>::_tail{&_tail, &_tail};
 
-}  // namespace ztl
+} // namespace ztl

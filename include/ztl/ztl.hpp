@@ -13,6 +13,7 @@
 #include "bits.hpp"
 #include "compilation_time.hpp"
 #include "counted_latch.hpp"
+#include "delayed_latch.hpp"
 #include "directional_latch.hpp"
 #include "edge_detector.hpp"
 #include "enum.hpp"

@@ -32,7 +32,7 @@ template<auto... Is>
 struct count_type_impl
   : std::integral_constant<decltype((Is, ...)), (Is + ... + 0u)> {};
 
-}  // namespace detail
+} // namespace detail
 
 /// Count occurrences of T in Ts...
 ///
@@ -53,7 +53,7 @@ template<template<typename...> typename T>
 struct can_have_empty_argument_list_impl<T, std::void_t<T<>>> : std::true_type {
 };
 
-}  // namespace detail
+} // namespace detail
 
 /// True if template T can have an empty template argument list
 ///
@@ -74,7 +74,7 @@ struct is_template_impl : std::false_type {};
 template<template<typename...> typename T, typename... Ts>
 struct is_template_impl<T<Ts...>> : std::true_type {};
 
-}  // namespace detail
+} // namespace detail
 
 /// True if T is a template
 ///
@@ -95,7 +95,7 @@ struct is_derived_from_impl {
                        std::false_type>;
 };
 
-}  // namespace detail
+} // namespace detail
 
 /// True if T derives from U
 ///
@@ -139,7 +139,7 @@ struct is_specialization_of_impl : std::false_type {};
 template<template<typename...> typename T, typename... Ts>
 struct is_specialization_of_impl<T<Ts...>, T> : std::true_type {};
 
-}  // namespace detail
+} // namespace detail
 
 /// True if T is any specialized type of Ts...
 ///
@@ -162,7 +162,7 @@ template<typename T, template<typename...> typename U, typename... Us>
 struct contains_type_impl<T, U<Us...>>
   : std::disjunction<std::is_same<T, Us>...> {};
 
-}  // namespace detail
+} // namespace detail
 
 /// True if any type in U is T
 ///
@@ -207,7 +207,7 @@ struct type_index_impl<std::index_sequence<Is...>, T, Ts...>
   static_assert(count_type_v<T, Ts...> == 1u);
 };
 
-}  // namespace detail
+} // namespace detail
 
 /// Get index of T in Ts...
 ///
@@ -247,7 +247,7 @@ struct template_size_impl<T<Ts...>> {
   static constexpr size_t value{sizeof...(Ts)};
 };
 
-}  // namespace detail
+} // namespace detail
 
 /// Provide access to number of elements in a template
 ///
@@ -268,7 +268,7 @@ struct template_impl<T<Ts...>, Us...> {
   using type = T<Us...>;
 };
 
-}  // namespace detail
+} // namespace detail
 
 /// Use template type T with template arguments Ts...
 ///
@@ -278,4 +278,4 @@ template<typename T, typename... Ts>
 using template_t =
   typename detail::template_impl<std::remove_cvref_t<T>, Ts...>::type;
 
-}  // namespace ztl
+} // namespace ztl

@@ -43,4 +43,4 @@ inline int print_error_code(error_code e, int (*fp)(char const* format, ...)) {
   else return fp("Success\n");
 }
 
-}  // namespace ztl
+} // namespace ztl

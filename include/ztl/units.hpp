@@ -254,4 +254,4 @@ constexpr float operator""_C2K(long double temp) {
   return static_cast<float>(static_cast<double>(temp) + 273.15);
 }
 
-}  // namespace ztl
+} // namespace ztl

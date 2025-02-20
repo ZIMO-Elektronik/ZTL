@@ -396,4 +396,4 @@ constexpr auto data(inplace_deque<T, I> const& c) -> decltype(c.data()) {
   return c.data();
 }
 
-}  // namespace ztl
+} // namespace ztl

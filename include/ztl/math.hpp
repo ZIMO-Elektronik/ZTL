@@ -159,4 +159,4 @@ constexpr auto hundreds_digit(T value) {
   return digit<100>(value);
 }
 
-}  // namespace ztl
+} // namespace ztl

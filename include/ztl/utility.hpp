@@ -26,7 +26,7 @@ struct tuple_element<I, integer_sequence<T, Is...>> {
   using type = tuple_element_t<I, tuple<integral_constant<T, Is>...>>;
 };
 
-}  // namespace std
+} // namespace std
 
 namespace ztl {
 
@@ -105,7 +105,7 @@ constexpr auto reverse_impl(std::integer_sequence<T, Is...>,
                                  std::index_sequence<Is...>{})...>{};
 }
 
-}  // namespace detail
+} // namespace detail
 
 /// Reverse integer sequence
 ///
@@ -154,7 +154,7 @@ auto make_integer_sequence_from_to_impl() {
       make_reverse_integer_sequence<T, (I < J ? J - I : I - J)>{});
 }
 
-}  // namespace detail
+} // namespace detail
 
 /// Make integer sequence in half-open interval [From, To)
 ///
@@ -185,4 +185,4 @@ consteval uint32_t index_sequence2mask(std::index_sequence<Is...>) {
   else return ((1u << Is) | ...);
 }
 
-}  // namespace ztl
+} // namespace ztl

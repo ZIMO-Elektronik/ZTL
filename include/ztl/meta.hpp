@@ -22,7 +22,7 @@ constexpr void for_each_impl(T&& t, F&& f, std::index_sequence<Is...>) {
   (f(get<Is>(std::forward<T>(t))), ...);
 }
 
-}  // namespace detail
+} // namespace detail
 
 /// Applies a callable object to each sequence element
 ///
@@ -53,7 +53,7 @@ constexpr auto reverse_impl(T&& t, std::index_sequence<Is...>) {
     get<Is>(std::forward<T>(t))...};
 }
 
-}  // namespace detail
+} // namespace detail
 
 /// Reverse the order of the elements
 ///
@@ -67,4 +67,4 @@ constexpr auto reverse(T&& t) {
     make_reverse_index_sequence<std::tuple_size_v<std::remove_cvref_t<T>>>{});
 }
 
-}  // namespace ztl
+} // namespace ztl

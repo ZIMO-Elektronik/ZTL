@@ -100,4 +100,4 @@ consteval T make_unix_compilation_time(compilation_time epoch = default_epoch) {
                         compilation_time2seconds(epoch));
 }
 
-}  // namespace ztl
+} // namespace ztl

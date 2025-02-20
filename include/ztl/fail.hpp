@@ -22,4 +22,4 @@ void fail() {
   static_assert(T{});
 }
 
-}  // namespace ztl
+} // namespace ztl

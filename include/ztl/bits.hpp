@@ -53,4 +53,4 @@ constexpr uint32_t make_value(T mask, U value) {
   return retval;
 }
 
-}  // namespace ztl
+} // namespace ztl

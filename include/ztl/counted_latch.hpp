@@ -71,4 +71,4 @@ private:
   smallest_unsigned_t<I> _count{};
 };
 
-}  // namespace ztl
+} // namespace ztl

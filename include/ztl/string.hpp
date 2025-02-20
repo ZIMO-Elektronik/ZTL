@@ -243,4 +243,4 @@ constexpr char const* strstr(char const* haystack, char const* needle) {
 /// Convert uint64 to chars
 #define UINT64_TO_BINARY INT64_TO_BINARY
 
-}  // namespace ztl
+} // namespace ztl
