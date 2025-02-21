@@ -48,4 +48,4 @@ using smallest_unsigned_t = std::conditional_t<
                        uint32_t,
                        uint64_t>>>;
 
-}  // namespace ztl
+} // namespace ztl

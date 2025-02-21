@@ -28,4 +28,4 @@ private:
   bool _value{false};
 };
 
-}  // namespace ztl
+} // namespace ztl

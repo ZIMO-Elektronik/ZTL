@@ -2,24 +2,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-/// Fail
+/// Concepts
 ///
-/// \file   ztl/fail.hpp
+/// \file   ztl/concepts.hpp
 /// \author Vincent Hamp
-/// \date   17/10/2018
+/// \date   21/02/2025
 
 #pragma once
 
-#include <type_traits>
+#include <concepts>
+#include "meta.hpp"
+#include "utility.hpp"
 
 namespace ztl {
 
-/// Compile-time fail for use in if constexpr
-///
-/// \tparam T Obligatory type for delayed instantiation
-template<typename T = std::false_type>
-void fail() {
-  static_assert(T{});
-}
+template<typename T>
+concept chrono_duration = is_chrono_duration_v<T>;
 
 } // namespace ztl

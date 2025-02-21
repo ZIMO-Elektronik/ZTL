@@ -2,39 +2,43 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-/// Counted latch
+/// Delayed latch
 ///
-/// \file   ztl/counted_latch.hpp
+/// \file   ztl/delayed_latch.hpp
 /// \author Vincent Hamp
-/// \date   05/09/2018
+/// \date   20/02/2025
 
 #pragma once
 
+#include <chrono>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
 #include <utility>
+#include "concepts.hpp"
 #include "limits.hpp"
 
 namespace ztl {
 
-/// Latches T after it was set for at least I times
+/// Latches T after it was set for at least I ticks
 ///
-/// \tparam T Type of latch
-/// \tparam I Times to latch
-template<std::equality_comparable T, size_t I>
-requires(I > 0uz)
-struct counted_latch {
+/// \tparam T         Type of latch
+/// \tparam Duration  chrono_duration
+template<std::equality_comparable T, chrono_duration Duration>
+struct delayed_latch {
   using value_type = T;
 
   /// Default ctor
-  constexpr counted_latch() = default;
+  constexpr delayed_latch() = default;
 
   /// Ctor
   ///
-  /// \param  value Initial value
-  constexpr counted_latch(value_type const& value)
-    : _value{value}, _next_value{value} {}
+  /// \param  value     Initial value
+  /// \param  duration  Duration
+  constexpr delayed_latch(value_type const& value,
+                          Duration const& duration = {})
+    : _tp{std::chrono::system_clock::now()}, _value{value}, _next_value{value},
+      _duration{duration} {}
 
   /// Set latch
   ///
@@ -44,12 +48,12 @@ struct counted_latch {
       reset();
       _next_value = value;
     }
-    if (++_count < I) return;
-    _value = _next_value;
+    if (std::chrono::system_clock::now() - _tp >= _duration)
+      _value = _next_value;
   }
 
   /// Reset latch
-  void reset() { _count = 0u; }
+  void reset() { _tp = std::chrono::system_clock::now(); }
 
   /// Reset latch
   ///
@@ -59,6 +63,14 @@ struct counted_latch {
     _value = _next_value = value;
   }
 
+  /// Reset latch
+  ///
+  /// \param  duration  Reset duration
+  void reset(Duration const& duration) {
+    reset();
+    _duration = duration;
+  }
+
   constexpr value_type const& value() const& { return _value; }
   constexpr value_type const&& value() const&& { return std::move(_value); }
 
@@ -66,9 +78,10 @@ struct counted_latch {
   constexpr operator value_type const&&() const&& { return std::move(value()); }
 
 private:
+  std::chrono::time_point<std::chrono::system_clock> _tp{};
   T _value{};
   T _next_value{};
-  smallest_unsigned_t<I> _count{};
+  Duration _duration{};
 };
 
 } // namespace ztl

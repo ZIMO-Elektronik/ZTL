@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.20.0
+- Add `delayed_latch`
+
 ## 0.19.1
 - Bugfix CMake always includes tests
 

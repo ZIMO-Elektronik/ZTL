@@ -120,4 +120,4 @@ eval_hermite_splines(std::array<T, I> const& x,
   return sy;
 }
 
-}  // namespace ztl
+} // namespace ztl
