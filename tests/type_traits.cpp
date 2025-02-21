@@ -249,3 +249,17 @@ TEST(type_traits, type_index) {
   //  auto i = ztl::type_index<int, double, char, float>{};
   //  EXPECT_EQ(0, i);
 }
+
+// Check if type is chrono_duration
+TEST(type_traits, is_chrono_duration) {
+  std::chrono::milliseconds ms{10};
+  auto i{42};
+  std::chrono::seconds s{10};
+  std::chrono::hours const h{3};
+
+  EXPECT_TRUE(ztl::is_chrono_duration_v<decltype(ms)>);
+  EXPECT_FALSE(ztl::is_chrono_duration_v<decltype(i)>);
+  EXPECT_FALSE(ztl::is_chrono_duration_v<std::nullopt_t>);
+  EXPECT_TRUE(ztl::is_chrono_duration_v<decltype(s)>);
+  EXPECT_TRUE(ztl::is_chrono_duration_v<decltype(h)>);
+}

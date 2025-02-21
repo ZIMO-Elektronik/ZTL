@@ -12,33 +12,31 @@ enum class E { _0, _1 };
 TEST(counted_latch, ctor) {
   {
     ztl::counted_latch<E, 8uz> cl;
-    E e{cl};
-    EXPECT_EQ(E::_0, e);
+    EXPECT_EQ(cl, E::_0);
   }
 
   {
     ztl::counted_latch<E, 2uz> cl{E::_1};
-    E e{cl};
-    EXPECT_EQ(E::_1, e);
+    EXPECT_EQ(cl, E::_1);
   }
 
   {
     struct S {
-      S(int i) : i_{i} {}
-      int i_;
+      S(int i) : _i{i} {}
+      int _i;
       auto operator<=>(S const&) const = default;
     };
 
     ztl::counted_latch<S, 8uz> cl{S{10}};
     S s{cl};
-    EXPECT_EQ(10, s.i_);
+    EXPECT_EQ(s._i, 10);
   }
 }
 
 TEST(counted_latch, set) {
   // Latching 8 times should yield the new value
   {
-    ztl::counted_latch<E, 8u> cl;
+    ztl::counted_latch<E, 8uz> cl;
     cl.set(E::_1); // 1
     cl.set(E::_1); // 2
     cl.set(E::_1); // 3
@@ -47,13 +45,12 @@ TEST(counted_latch, set) {
     cl.set(E::_1); // 6
     cl.set(E::_1); // 7
     cl.set(E::_1); // 8
-    E e{cl};
-    EXPECT_EQ(E::_1, e);
+    EXPECT_EQ(cl, E::_1);
   }
 
   // Latching only 7 times won't yield the new value
   {
-    ztl::counted_latch<E, 8u> cl;
+    ztl::counted_latch<E, 8uz> cl;
     cl.set(E::_1); // 1
     cl.set(E::_1); // 2
     cl.set(E::_1); // 3
@@ -61,14 +58,13 @@ TEST(counted_latch, set) {
     cl.set(E::_1); // 5
     cl.set(E::_1); // 6
     cl.set(E::_1); // 7
-    E e{cl};
-    EXPECT_EQ(E::_0, e);
+    EXPECT_EQ(cl, E::_0);
   }
 
   // Latching a new value 4 times, then the old one once, and the new one 3
   // times again won't yield the new value
   {
-    ztl::counted_latch<E, 8u> cl;
+    ztl::counted_latch<E, 8uz> cl;
     cl.set(E::_1); // 1
     cl.set(E::_1); // 2
     cl.set(E::_1); // 3
@@ -77,14 +73,13 @@ TEST(counted_latch, set) {
     cl.set(E::_1); // 6
     cl.set(E::_1); // 7
     cl.set(E::_1); // 8
-    E e{cl};
-    EXPECT_EQ(E::_0, e);
+    EXPECT_EQ(cl, E::_0);
   }
 
   // Latching 8 times should yield the new value, latching the old one only 4
   // times afterwards won't change that
   {
-    ztl::counted_latch<E, 8u> cl;
+    ztl::counted_latch<E, 8uz> cl;
     cl.set(E::_1); // 1
     cl.set(E::_1); // 2
     cl.set(E::_1); // 3
@@ -97,8 +92,7 @@ TEST(counted_latch, set) {
     cl.set(E::_0); // 2
     cl.set(E::_0); // 3
     cl.set(E::_0); // 4
-    E e{cl};
-    EXPECT_EQ(E::_1, e);
+    EXPECT_EQ(cl, E::_1);
   }
 
   // Latching combined with an optional

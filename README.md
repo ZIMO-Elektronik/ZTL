@@ -12,10 +12,10 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
   Compiletime stamps from \_\_DATE\_\_ and \_\_TIME\_\_ macros
   
 - `counted_latch.hpp`  
-  Latch-like class which needs several attempts to set a value before actually assigning to it
+  Latches it's value after it hasn't changed for at least I times
 
 - `delayed_latch.hpp`  
-  TODO
+  Latches it's value after is hasn't changed for at least I ticks
 
 - `cstring.hpp`  
   Stack allocated container for string

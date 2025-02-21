@@ -16,7 +16,7 @@
 
 namespace ztl {
 
-/// True if all Ts... are T
+/// Check if all Ts... are T
 ///
 /// \tparam T     Type to look for
 /// \tparam Ts... Types to compare against
@@ -55,7 +55,7 @@ struct can_have_empty_argument_list_impl<T, std::void_t<T<>>> : std::true_type {
 
 } // namespace detail
 
-/// True if template T can have an empty template argument list
+/// Check if template T can have an empty template argument list
 ///
 /// \tparam T Template to check
 template<template<typename...> typename T>
@@ -76,7 +76,7 @@ struct is_template_impl<T<Ts...>> : std::true_type {};
 
 } // namespace detail
 
-/// True if T is a template
+/// Check if T is a template
 ///
 /// \tparam T Type to check
 template<typename T>
@@ -97,7 +97,7 @@ struct is_derived_from_impl {
 
 } // namespace detail
 
-/// True if T derives from U
+/// Check if T derives from U
 ///
 /// \tparam T Derived
 /// \tparam U Base
@@ -109,7 +109,7 @@ using is_derived_from =
 template<typename T, typename U>
 inline constexpr bool is_derived_from_v{is_derived_from<T, U>::value};
 
-/// True if T derives from all Ts...
+/// Check if T derives from all Ts...
 ///
 /// \tparam T     Derived
 /// \tparam Ts... Bases
@@ -120,7 +120,7 @@ template<typename T, typename... Ts>
 inline constexpr bool is_derived_from_all_v{
   is_derived_from_all<T, Ts...>::value};
 
-/// True if T derives from any Ts...
+/// Check if T derives from any Ts...
 ///
 /// \tparam T     Derived
 /// \tparam Ts... Bases
@@ -141,7 +141,7 @@ struct is_specialization_of_impl<T<Ts...>, T> : std::true_type {};
 
 } // namespace detail
 
-/// True if T is any specialized type of Ts...
+/// Check if T is any specialized type of Ts...
 ///
 /// \tparam T     Specialized type
 /// \tparam Ts... Types to specialize from
@@ -164,7 +164,7 @@ struct contains_type_impl<T, U<Us...>>
 
 } // namespace detail
 
-/// True if any type in U is T
+/// Check if any type in U is T
 ///
 /// \tparam T Type to look for
 /// \tparam U Type to look in
@@ -174,7 +174,7 @@ using contains_type = detail::contains_type_impl<T, std::remove_cvref_t<U>>;
 template<typename T, typename U>
 inline constexpr bool contains_type_v{contains_type<T, U>::value};
 
-/// True if T has or is all bases in Ts...
+/// Check if T has or is all bases in Ts...
 ///
 /// \tparam T     Derived
 /// \tparam Ts... Bases
@@ -185,7 +185,7 @@ using has_base_from_all = std::conjunction<
 template<typename T, typename... Ts>
 inline constexpr bool has_base_from_all_v{has_base_from_all<T, Ts...>::value};
 
-/// True if T has or is any base in Ts...
+/// Check if T has or is any base in Ts...
 ///
 /// \tparam T     Derived
 /// \tparam Ts... Bases
@@ -277,5 +277,25 @@ struct template_impl<T<Ts...>, Us...> {
 template<typename T, typename... Ts>
 using template_t =
   typename detail::template_impl<std::remove_cvref_t<T>, Ts...>::type;
+
+namespace detail {
+
+template<typename>
+struct is_chrono_duration : std::false_type {};
+
+template<typename Rep, typename Period>
+struct is_chrono_duration<std::chrono::duration<Rep, Period>> : std::true_type {
+};
+
+} // namespace detail
+
+/// Check if T is a chrono_duration
+///
+/// \tparam T Type to check
+template<typename T>
+using is_chrono_duration = detail::is_chrono_duration<std::remove_cvref_t<T>>;
+
+template<typename T>
+inline constexpr bool is_chrono_duration_v{is_chrono_duration<T>::value};
 
 } // namespace ztl

@@ -23,6 +23,7 @@ namespace ztl {
 /// \tparam T Type of latch
 /// \tparam I Times to latch
 template<std::totally_ordered T, size_t I>
+requires(I > 0uz)
 struct directional_latch {
   using value_type = T;
 
@@ -43,7 +44,6 @@ struct directional_latch {
       reset();
     if (!_count) _less = value < _value;
     if (++_count < I) return;
-    reset();
     _value = value;
   }
 

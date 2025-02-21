@@ -23,6 +23,7 @@ namespace ztl {
 /// \tparam T Type of latch
 /// \tparam I Times to latch
 template<std::equality_comparable T, size_t I>
+requires(I > 0uz)
 struct counted_latch {
   using value_type = T;
 
@@ -44,7 +45,6 @@ struct counted_latch {
       _next_value = value;
     }
     if (++_count < I) return;
-    reset();
     _value = _next_value;
   }
 

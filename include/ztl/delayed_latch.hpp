@@ -15,15 +15,18 @@
 #include <cstddef>
 #include <cstdint>
 #include <utility>
+#include "concepts.hpp"
 #include "limits.hpp"
 
 namespace ztl {
 
-/// Latches T after it was set for at least I times
+/// Latches T after it was set for at least I ticks
 ///
-/// \tparam T Type of latch
-/// \tparam I Times to latch
-template<std::equality_comparable T, size_t I>
+/// \tparam T         Type of latch
+/// \tparam Duration  chrono_duration
+/// \tparam I         Number of ticks
+template<std::equality_comparable T, chrono_duration Duration, int64_t I>
+requires(I > 0)
 struct delayed_latch {
   using value_type = T;
 
@@ -34,7 +37,8 @@ struct delayed_latch {
   ///
   /// \param  value Initial value
   constexpr delayed_latch(value_type const& value)
-    : _value{value}, _next_value{value} {}
+    : _tp{std::chrono::system_clock::now()}, _value{value}, _next_value{value} {
+  }
 
   /// Set latch
   ///
@@ -44,13 +48,12 @@ struct delayed_latch {
       reset();
       _next_value = value;
     }
-    if (++_count < I) return;
-    reset();
-    _value = _next_value;
+    if (std::chrono::system_clock::now() - _tp >= Duration{I})
+      _value = _next_value;
   }
 
   /// Reset latch
-  void reset() { _count = 0u; }
+  void reset() { _tp = std::chrono::system_clock::now(); }
 
   /// Reset latch
   ///
@@ -67,9 +70,9 @@ struct delayed_latch {
   constexpr operator value_type const&&() const&& { return std::move(value()); }
 
 private:
+  std::chrono::time_point<std::chrono::system_clock> _tp{};
   T _value{};
   T _next_value{};
-  smallest_unsigned_t<I> _count{};
 };
 
 } // namespace ztl
