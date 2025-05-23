@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+- Add `signature` type trait
+- Add `make_tramp` utility function
+
 ## 0.20.0
 - Add `delayed_latch`
 

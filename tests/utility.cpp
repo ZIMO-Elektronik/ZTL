@@ -2,6 +2,17 @@
 #include <gtest/gtest.h>
 #include <ztl/utility.hpp>
 
+namespace {
+
+struct Adder {
+  int op(int v) { return _sum += v; }
+
+private:
+  int _sum{};
+};
+
+} // namespace
+
 TEST(utility, get) {
   auto is{std::integer_sequence<int, 1, 2, 3>{}};
   static_assert((
@@ -112,5 +123,60 @@ TEST(utility, make_integer_sequence_from_to) {
     EXPECT_TRUE(
       (std::same_as<decltype(s),
                     std::integer_sequence<char, 5, 4, 3, 2, 1, 0, -1>>));
+  }
+}
+
+TEST(utility, make_trampoline) {
+  {
+    Adder add;
+    auto f{ztl::make_trampoline(&add, &Adder::op)};
+
+    EXPECT_EQ(42, f(42));
+    EXPECT_EQ(142, f(100));
+  }
+
+  {
+    Adder add;
+    auto f{ztl::make_trampoline([add](int v) mutable { return add.op(v); })};
+
+    EXPECT_EQ(42, f(42));
+    EXPECT_EQ(142, f(100));
+  }
+}
+
+TEST(utility, make_trampoline_bind_to_different_instance) {
+  {
+    auto bind_different_object_no_longer_unique{
+      [](Adder& add) { return ztl::make_trampoline(&add, &Adder::op); }};
+
+    Adder add0;
+    auto f0{bind_different_object_no_longer_unique(add0)};
+
+    EXPECT_EQ(42, f0(42));
+    EXPECT_EQ(142, f0(100));
+
+    Adder add1;
+    auto f1{bind_different_object_no_longer_unique(add1)};
+
+    EXPECT_EQ(42, f1(42));
+    EXPECT_EQ(142, f1(100));
+  }
+
+  {
+    auto bind_different_object_no_longer_unique{[](Adder& add) {
+      return ztl::make_trampoline([add](int v) mutable { return add.op(v); });
+    }};
+
+    Adder add0;
+    auto f0{bind_different_object_no_longer_unique(add0)};
+
+    EXPECT_EQ(42, f0(42));
+    EXPECT_EQ(142, f0(100));
+
+    Adder add1;
+    auto f1{bind_different_object_no_longer_unique(add1)};
+
+    EXPECT_EQ(42, f1(42));
+    EXPECT_EQ(142, f1(100));
   }
 }
