@@ -12,7 +12,9 @@
 
 #include <array>
 #include <functional>
+#include <optional>
 #include "bits.hpp"
+#include "type_traits.hpp"
 
 // Make std::integer_sequence tuple-like accessible
 namespace std {
@@ -174,7 +176,7 @@ using make_integer_sequence_from_to =
 template<size_t I, size_t J>
 using make_index_sequence_from_to = make_integer_sequence_from_to<size_t, I, J>;
 
-/// Index sequence to mask (TODO should be consteval, can't be because of bug)
+/// Index sequence to mask
 ///
 /// \tparam Is...                     Indices
 /// \param  std::index_sequenc<Is...> Index sequence
@@ -183,6 +185,42 @@ template<size_t... Is>
 consteval uint32_t index_sequence2mask(std::index_sequence<Is...>) {
   if constexpr (!sizeof...(Is)) return 0u;
   else return ((1u << Is) | ...);
+}
+
+/// Make trampoline
+///
+/// \tparam Unique  Type that guarantees uniqueness for each use
+/// \tparam T       Type of class
+/// \tparam F       Type of member function
+/// \return Trampoline
+template<[[maybe_unused]] auto Unique = [] {}, typename T, typename F>
+constexpr auto make_trampoline(T&& t, F&& f) {
+  using Args = signature<F>::args;
+  static T _t;
+  _t = t;
+  static auto _f{f};
+  return []<size_t... Is>(std::index_sequence<Is...>) {
+    return [](std::tuple_element_t<Is, Args>... args) {
+      return std::invoke(_f, _t, std::forward<decltype(args)>(args)...);
+    };
+  }(std::make_index_sequence<std::tuple_size_v<Args>>{});
+}
+
+/// Make trampoline
+///
+/// \tparam Unique  Type that guarantees uniqueness for each use
+/// \tparam F       Type of function object
+/// \return Trampoline
+template<[[maybe_unused]] auto Unique = [] {}, typename F>
+constexpr auto make_trampoline(F&& f) {
+  using Args = signature<F>::args;
+  static std::optional<F> _f;
+  _f.emplace(std::forward<F>(f));
+  return []<size_t... Is>(std::index_sequence<Is...>) {
+    return [](std::tuple_element_t<Is, Args>... args) {
+      return std::invoke(*_f, std::forward<decltype(args)>(args)...);
+    };
+  }(std::make_index_sequence<std::tuple_size_v<Args>>{});
 }
 
 } // namespace ztl

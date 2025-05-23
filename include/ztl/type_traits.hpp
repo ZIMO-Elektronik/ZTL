@@ -13,7 +13,7 @@
 #include <array>
 #include <chrono>
 #include <concepts>
-#include "utility.hpp"
+#include <functional>
 
 namespace ztl {
 
@@ -298,5 +298,65 @@ using is_chrono_duration = detail::is_chrono_duration<std::remove_cvref_t<T>>;
 
 template<typename T>
 inline constexpr bool is_chrono_duration_v{is_chrono_duration<T>::value};
+
+template<typename>
+struct signature;
+
+/// Signature of free function
+///
+/// \tparam R       Type of return value
+/// \tparam Args... Types of arguments
+template<typename R, typename... Args>
+struct signature<R (*)(Args...)> {
+  using type = R(Args...);
+  using return_type = R;
+  using args = std::tuple<Args...>;
+};
+
+/// Signature of method
+///
+/// \tparam R       Type of return value
+/// \tparam T       Type of class
+/// \tparam Args... Types of arguments
+template<typename R, typename T, typename... Args>
+struct signature<R (T::*)(Args...)> {
+  using type = R (T::*)(Args...);
+  using return_type = R;
+  using args = std::tuple<Args...>;
+};
+
+/// Signature of const method
+///
+/// \tparam R       Type of return value
+/// \tparam T       Type of class
+/// \tparam Args... Types of arguments
+template<typename R, typename T, typename... Args>
+struct signature<R (T::*)(Args...) const> {
+  using type = R (T::*)(Args...) const;
+  using return_type = R;
+  using args = std::tuple<Args...>;
+};
+
+/// Signature of function object
+///
+/// \tparam F Type of function object
+template<typename F>
+struct signature {
+  using type = signature<decltype(std::function{std::declval<F>()})>::type;
+  using return_type =
+    signature<decltype(std::function{std::declval<F>()})>::return_type;
+  using args = signature<decltype(std::function{std::declval<F>()})>::args;
+};
+
+/// Signature of std::function
+///
+/// \tparam R       Type of return value
+/// \tparam Args... Types of arguments
+template<typename R, typename... Args>
+struct signature<std::function<R(Args...)>> {
+  using type = R(Args...);
+  using return_type = R;
+  using args = std::tuple<Args...>;
+};
 
 } // namespace ztl

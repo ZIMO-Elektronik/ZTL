@@ -263,3 +263,48 @@ TEST(type_traits, is_chrono_duration) {
   EXPECT_TRUE(ztl::is_chrono_duration_v<decltype(s)>);
   EXPECT_TRUE(ztl::is_chrono_duration_v<decltype(h)>);
 }
+
+// Signature of free function, method and function object
+TEST(type_traits, signature) {
+  {
+    int foo(int, char const*);
+
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(&foo)>::type,
+                              int(int, char const*)>));
+    EXPECT_TRUE(
+      (std::same_as<ztl::signature<decltype(&foo)>::return_type, int>));
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(&foo)>::args,
+                              std::tuple<int, char const*>>));
+  }
+
+  {
+    struct Foo {
+      double foo(int, char);
+      void bar() const;
+    };
+
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(&Foo::foo)>::type,
+                              double (Foo::*)(int, char)>));
+    EXPECT_TRUE(
+      (std::same_as<ztl::signature<decltype(&Foo::foo)>::return_type, double>));
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(&Foo::foo)>::args,
+                              std::tuple<int, char>>));
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(&Foo::bar)>::type,
+                              void (Foo::*)() const>));
+    EXPECT_TRUE(
+      (std::same_as<ztl::signature<decltype(&Foo::bar)>::return_type, void>));
+    EXPECT_TRUE(
+      (std::same_as<ztl::signature<decltype(&Foo::bar)>::args, std::tuple<>>));
+  }
+
+  {
+    auto l{[](int const&, double&) { return ""; }};
+
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(l)>::type,
+                              char const*(int const&, double&)>));
+    EXPECT_TRUE(
+      (std::same_as<ztl::signature<decltype(l)>::return_type, char const*>));
+    EXPECT_TRUE((std::same_as<ztl::signature<decltype(l)>::args,
+                              std::tuple<int const&, double&>>));
+  }
+}
