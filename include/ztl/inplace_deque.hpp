@@ -34,8 +34,8 @@ namespace ztl {
 template<typename T, size_t I>
 struct inplace_deque {
   template<bool Const>
-  struct iterator_ {
-    friend iterator_<true>;
+  struct _iterator {
+    friend _iterator<true>;
 
     // Types
     using value_type = std::conditional_t<Const, T const, T>;
@@ -48,14 +48,14 @@ struct inplace_deque {
       std::conditional_t<Const, inplace_deque const*, inplace_deque*>;
 
     // Construct/copy/destroy
-    constexpr iterator_() = default;
-    constexpr iterator_(inplace_deque_pointer ptr, size_type i)
+    constexpr _iterator() = default;
+    constexpr _iterator(inplace_deque_pointer ptr, size_type i)
       : _ptr{ptr}, _i{i} {}
-    constexpr iterator_(iterator_ const&) = default;
-    constexpr iterator_(iterator_<false> const& rhs) requires Const
+    constexpr _iterator(_iterator const&) = default;
+    constexpr _iterator(_iterator<false> const& rhs) requires Const
       : _ptr{rhs._ptr}, _i{rhs._i} {}
-    constexpr iterator_& operator=(iterator_ const&) = default;
-    constexpr iterator_& operator=(iterator_ const& rhs) requires Const
+    constexpr _iterator& operator=(_iterator const&) = default;
+    constexpr _iterator& operator=(_iterator const& rhs) requires Const
     {
       _ptr = rhs._ptr;
       _i = rhs._i;
@@ -66,55 +66,55 @@ struct inplace_deque {
       return _ptr->_data[(_i + i) % (I + 1uz)];
     }
 
-    constexpr iterator_& operator++() {
+    constexpr _iterator& operator++() {
       _i = static_cast<size_type>((_i + 1uz) % (I + 1uz));
       return *this;
     }
 
-    constexpr iterator_ operator++(int) {
-      iterator_ retval{*this};
+    constexpr _iterator operator++(int) {
+      _iterator retval{*this};
       _i = static_cast<size_type>((_i + 1uz) % (I + 1uz));
       return retval;
     }
 
-    constexpr iterator_& operator--() {
+    constexpr _iterator& operator--() {
       if constexpr (std::has_single_bit(I + 1uz))
         _i = static_cast<size_type>((_i - 1uz) % (I + 1uz));
       else _i = static_cast<size_type>(_i ? _i - 1uz : I);
       return *this;
     }
 
-    constexpr iterator_ operator--(int) {
-      iterator_ retval{*this};
+    constexpr _iterator operator--(int) {
+      _iterator retval{*this};
       if constexpr (std::has_single_bit(I + 1uz))
         _i = static_cast<size_type>((_i - 1uz) % (I + 1uz));
       else _i = static_cast<size_type>(_i ? _i - 1uz : I);
       return retval;
     }
 
-    constexpr iterator_ operator+(difference_type n) const {
+    constexpr _iterator operator+(difference_type n) const {
       auto const i{euclidean_mod<difference_type>(_i + n, I + 1uz)};
-      return iterator_{_ptr, static_cast<size_type>(i)};
+      return _iterator{_ptr, static_cast<size_type>(i)};
     }
 
-    constexpr iterator_& operator+=(difference_type n) {
+    constexpr _iterator& operator+=(difference_type n) {
       _i =
         static_cast<size_type>(euclidean_mod<difference_type>(_i + n, I + 1uz));
       return *this;
     }
 
-    difference_type operator-(iterator_ const& rhs) const {
+    difference_type operator-(_iterator const& rhs) const {
       return _i + static_cast<difference_type>(I + 1uz) * (_i < _ptr->_rd) -
              rhs._i -
              static_cast<difference_type>(I + 1uz) * (rhs._i < _ptr->_rd);
     }
 
-    constexpr iterator_ operator-(difference_type n) const {
+    constexpr _iterator operator-(difference_type n) const {
       auto const i{euclidean_mod<difference_type>(_i - n, I + 1uz)};
-      return iterator_{_ptr, static_cast<size_type>(i)};
+      return _iterator{_ptr, static_cast<size_type>(i)};
     }
 
-    constexpr iterator_& operator-=(difference_type n) {
+    constexpr _iterator& operator-=(difference_type n) {
       _i =
         static_cast<size_type>(euclidean_mod<difference_type>(_i - n, I + 1uz));
       return *this;
@@ -124,35 +124,35 @@ struct inplace_deque {
 
     constexpr pointer operator->() const { return &_ptr->_data[_i]; }
 
-    constexpr bool operator==(iterator_ const& rhs) const {
+    constexpr bool operator==(_iterator const& rhs) const {
       return _i == rhs._i;
     }
 
-    constexpr bool operator!=(iterator_ const& rhs) const {
+    constexpr bool operator!=(_iterator const& rhs) const {
       return !(*this == rhs);
     }
 
-    constexpr bool operator<(iterator_ const& rhs) const {
+    constexpr bool operator<(_iterator const& rhs) const {
       return _ptr->_rd <= _ptr->_wr ? _i < rhs._i : _i > rhs._i;
     }
 
-    constexpr bool operator>(iterator_ const& rhs) const { return rhs < *this; }
+    constexpr bool operator>(_iterator const& rhs) const { return rhs < *this; }
 
-    constexpr bool operator<=(iterator_ const& rhs) const {
+    constexpr bool operator<=(_iterator const& rhs) const {
       return !(*this > rhs);
     }
 
-    constexpr bool operator>=(iterator_ const& rhs) const {
+    constexpr bool operator>=(_iterator const& rhs) const {
       return !(*this < rhs);
     }
 
-    friend constexpr iterator_ operator+(difference_type lhs,
-                                         iterator_ const& rhs) {
+    friend constexpr _iterator operator+(difference_type lhs,
+                                         _iterator const& rhs) {
       return rhs + lhs;
     }
 
-    friend constexpr iterator_ operator-(difference_type lhs,
-                                         iterator_ const& rhs) {
+    friend constexpr _iterator operator-(difference_type lhs,
+                                         _iterator const& rhs) {
       return rhs + lhs;
     }
 
@@ -169,8 +169,8 @@ struct inplace_deque {
   using const_reference = T const&;
   using pointer = value_type*;
   using const_pointer = value_type const*;
-  using iterator = iterator_<false>;
-  using const_iterator = iterator_<true>;
+  using iterator = _iterator<false>;
+  using const_iterator = _iterator<true>;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
