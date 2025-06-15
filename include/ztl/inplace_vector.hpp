@@ -28,7 +28,7 @@ template<typename T, size_t I>
 struct inplace_vector {
   // Types
   using value_type = T;
-  using size_type = ztl::smallest_unsigned_t<I>;
+  using size_type = smallest_unsigned_t<I>;
   using difference_type = std::ptrdiff_t;
   using reference = value_type&;
   using const_reference = value_type const&;
@@ -118,7 +118,7 @@ struct inplace_vector {
 
 private:
   std::array<value_type, I> _data{};
-  ztl::smallest_unsigned_t<I> _size{};
+  smallest_unsigned_t<I> _size{};
 };
 
 template<typename T, typename... Ts>
