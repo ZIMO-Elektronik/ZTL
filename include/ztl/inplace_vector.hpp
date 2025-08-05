@@ -113,8 +113,18 @@ struct inplace_vector {
   constexpr void clear() { resize(0uz); }
 
   // Non-member functions
+  friend constexpr auto operator==(inplace_vector const& lhs,
+                                   inplace_vector const& rhs) {
+    return std::size(lhs) == std::size(rhs) && std::ranges::equal(lhs, rhs);
+  }
   friend constexpr auto operator<=>(inplace_vector const& lhs,
-                                    inplace_vector const& rhs) = default;
+                                    inplace_vector const& rhs) {
+    return std::lexicographical_compare_three_way(std::cbegin(lhs),
+                                                  std::cend(lhs),
+                                                  std::cbegin(rhs),
+                                                  std::cend(rhs),
+                                                  std::compare_three_way{});
+  }
 
 private:
   std::array<value_type, I> _data{};

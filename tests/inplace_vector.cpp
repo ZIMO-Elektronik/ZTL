@@ -56,3 +56,39 @@ TEST(inplace_vector, full) {
   // Trying to add further elements causes undefined behavior
   EXPECT_DEATH(c.push_back(42), "");
 }
+
+TEST(inplace_vector, three_way_comparison) {
+  ztl::inplace_vector<int, 10uz> a, b, c;
+
+  a.push_back(1);
+  a.push_back(2);
+  a.push_back(3);
+
+  b.push_back(1);
+  b.push_back(2);
+  b.push_back(3);
+
+  c.push_back(1);
+  c.push_back(2);
+  c.push_back(4);
+
+  // ==
+  EXPECT_TRUE((a <=> b) == 0);
+  EXPECT_TRUE(a == b);
+
+  // <
+  EXPECT_TRUE((a <=> c) < 0);
+  EXPECT_FALSE(a == c);
+
+  // >
+  EXPECT_TRUE((c <=> a) > 0);
+  EXPECT_FALSE(c == a);
+
+  // shorter vector test
+  ztl::inplace_vector<int, 10> d;
+  d.push_back(1);
+  d.push_back(2);
+
+  EXPECT_TRUE((d <=> a) < 0);
+  EXPECT_TRUE((a <=> d) > 0);
+}

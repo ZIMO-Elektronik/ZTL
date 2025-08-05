@@ -481,3 +481,48 @@ TEST(inplace_deque, traits) {
   static_assert(std::is_trivially_copy_constructible_v<iterator>);
   static_assert(std::is_trivially_copy_constructible_v<const_iterator>);
 }
+
+TEST(inplace_deque, three_way_comparison) {
+  ztl::inplace_deque<int, 10uz> a, b, c;
+
+  a.push_back(1);
+  a.push_back(2);
+  a.push_back(3);
+
+  b.push_front(3);
+  b.push_front(2);
+  b.push_front(1);
+
+  c.push_back(1);
+  c.push_back(2);
+  c.push_back(4);
+
+  // ==
+  EXPECT_TRUE((a <=> b) == 0);
+  EXPECT_TRUE(a == b);
+
+  // <
+  EXPECT_TRUE((a <=> c) < 0);
+  EXPECT_FALSE(a == c);
+
+  // >
+  EXPECT_TRUE((c <=> a) > 0);
+  EXPECT_FALSE(c == a);
+
+  // Prefix comparison: d = [1, 2]
+  ztl::inplace_deque<int, 10uz> d;
+  d.push_back(1);
+  d.push_back(2);
+
+  EXPECT_TRUE((d <=> a) < 0);
+  EXPECT_TRUE((a <=> d) > 0);
+
+  // Reverse order: e = [3, 2, 1]
+  ztl::inplace_deque<int, 10uz> e;
+  e.push_front(1);
+  e.push_front(2);
+  e.push_front(3);
+
+  EXPECT_TRUE((e <=> a) > 0); // [3,2,1] > [1,2,3] lexicographically
+  EXPECT_FALSE(e == a);
+}

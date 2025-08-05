@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.21.1
+- Bugfix `operator<=>` and `operator==` of `inplace_deque` and `inplace_vector` ([#13](https://github.com/ZIMO-Elektronik/ZTL/issues/13))
+
 ## 0.21.0
 - Add `signature` type trait
 - Add `make_tramp` utility function

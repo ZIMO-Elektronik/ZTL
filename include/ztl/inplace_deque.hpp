@@ -299,7 +299,15 @@ struct inplace_deque {
   // Non-member functions
   friend constexpr auto operator==(inplace_deque const& lhs,
                                    inplace_deque const& rhs) {
-    return std::ranges::equal(lhs, rhs);
+    return std::size(lhs) == std::size(rhs) && std::ranges::equal(lhs, rhs);
+  }
+  friend constexpr auto operator<=>(inplace_deque const& lhs,
+                                    inplace_deque const& rhs) {
+    return std::lexicographical_compare_three_way(std::cbegin(lhs),
+                                                  std::cend(lhs),
+                                                  std::cbegin(rhs),
+                                                  std::cend(rhs),
+                                                  std::compare_three_way{});
   }
 
 private:
