@@ -44,6 +44,9 @@ ZTL is an acronym for ZIMO template library, a conglomerate of utilities specifi
 - `inplace_deque.hpp`  
   Stack allocated double-ended queue which push- and pop functions for front and back
 
+- `inplace_list.hpp`
+  Stack allocated double-linked list with random insert / erase and push- / pop functions for front and back
+
 - `inplace_vector.hpp`  
   Incomplete implementation of `std::inplace_vector` proposal [P0843r6](https://isocpp.org/files/papers/P0843R8.html)
 
