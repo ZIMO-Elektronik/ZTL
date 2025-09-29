@@ -33,6 +33,7 @@ template<typename T, size_t I>
 struct inplace_list {
   template<bool Const>
   struct _iterator {
+    friend inplace_list<T, I>;
     // Types
     using value_type = T;
     using pointer = std::conditional_t<Const, value_type const*, value_type*>;
@@ -82,6 +83,7 @@ struct inplace_list {
       return &static_cast<node_pointer>(_link)->_element;
     }
 
+  private:
     link_pointer _link{nullptr};
   };
 
@@ -95,6 +97,8 @@ struct inplace_list {
   using node_ = node<value_type>;
   using iterator = _iterator<false>;
   using const_iterator = _iterator<true>;
+  using reverse_iterator = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   // Construct/copy/destroy
   constexpr inplace_list() {
@@ -110,13 +114,30 @@ struct inplace_list {
                     [value = 0]() mutable { return value++; });
     (push_back(static_cast<T>(ts)), ...);
   }
-  // Fix copy ctor
   constexpr inplace_list(inplace_list const& lhs)
     : _storage{lhs._storage}, _free{lhs._free} {
     if (lhs.empty()) return;
-    // Get front pos
 
-    // Get back pos
+    // Recalculate links
+    auto it{lhs.begin()};
+    for (; it != lhs.end(); it++) {
+      auto const i{
+        static_cast<size_type>((std::bit_cast<size_t>((it._link)) -
+                                std::bit_cast<size_t>(lhs._storage.data())) /
+                               sizeof(node<T>))};
+      _storage[i].next = (it._link->next == lhs.end()._link)
+                           ? &_tail
+                           : &_storage[static_cast<size_type>(
+                               (std::bit_cast<size_t>(it._link->next) -
+                                std::bit_cast<size_t>(lhs._storage.data())) /
+                               sizeof(node<T>))];
+      _storage[i].next->prev = &_storage[i];
+    }
+    // Recalculate begin
+    _tail.next = &_storage[static_cast<size_type>(
+      (std::bit_cast<size_t>(lhs.begin()) -
+       std::bit_cast<size_t>(lhs._storage.data())) /
+      sizeof(node<T>))];
   }
 
   // Capacity
@@ -167,12 +188,10 @@ struct inplace_list {
     pos._link->next->prev = pos._link->prev;
     pos._link->next = pos._link->prev = nullptr;
 
-    // Calculate freed index
-    auto const index{
+    _free.push_back(
       static_cast<size_type>((std::bit_cast<size_t>(pos._link) -
                               std::bit_cast<size_t>(_storage.data())) /
-                             sizeof(node<T>))};
-    _free.push_back(index);
+                             sizeof(node<T>)));
     return iterator{tmp};
   }
   constexpr void clear() {
@@ -203,8 +222,19 @@ struct inplace_list {
   constexpr iterator end() { return {&_tail}; }
   constexpr const_iterator end() const { return {&_tail}; }
 
+  constexpr reverse_iterator rbegin() { return reverse_iterator{end()}; }
+  constexpr const_reverse_iterator rbegin() const {
+    return const_reverse_iterator{end()};
+  }
+  constexpr reverse_iterator rend() { return reverse_iterator{begin()}; }
+  constexpr const_reverse_iterator rend() const {
+    return const_reverse_iterator{begin()};
+  }
+
   constexpr const_iterator cbegin() const { return begin(); }
   constexpr const_iterator cend() const { return end(); }
+  constexpr const_reverse_iterator crbegin() const { return rbegin(); }
+  constexpr const_reverse_iterator crend() const { return rend(); }
 
   // Non-member functions
   friend constexpr auto operator==(inplace_list const& lhs,

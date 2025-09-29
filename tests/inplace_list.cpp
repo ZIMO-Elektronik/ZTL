@@ -18,8 +18,11 @@ TEST(inplace_list, ctor) {
   EXPECT_EQ(size(variadic_ctor_ctad), 3uz);
   EXPECT_EQ(variadic_ctor_ctad.max_size(), 3uz);
 
-  ztl::inplace_list copy_ctor{default_ctor};
-  EXPECT_EQ(default_ctor, copy_ctor);
+  ztl::inplace_list copy_ctor{variadic_ctor};
+  EXPECT_EQ(copy_ctor.front(), 1);
+  EXPECT_EQ(copy_ctor.back(), 3);
+  EXPECT_EQ(size(copy_ctor), 3uz);
+  EXPECT_EQ(copy_ctor.max_size(), 5uz);
 }
 
 TEST(inplace_list, empty) {
