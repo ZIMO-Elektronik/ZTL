@@ -194,6 +194,15 @@ struct inplace_list {
                              sizeof(node<T>)));
     return iterator{tmp};
   }
+  constexpr iterator move(iterator elem, iterator pos) {
+    elem._link->prev->next = elem._link->next;
+    elem._link->next->prev = elem._link->prev;
+
+    elem._link->prev = pos._link->prev;
+    elem._link->next = pos._link;
+    pos._link->prev = pos._link->prev->next = elem._link;
+    return elem;
+  }
   constexpr void clear() {
     iterator first{begin()};
     iterator const last{end()};
