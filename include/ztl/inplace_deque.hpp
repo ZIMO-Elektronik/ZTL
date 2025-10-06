@@ -22,9 +22,9 @@
 namespace ztl {
 
 /// inplace_deque implements a double-ended queue which holds I elements of type
-/// T. Push and pop can be used to add and remove elements from the front and
-/// back the same way. An equal read and write index signals, that the queue is
-/// empty. If the queue is full, the indices differ by one. This leads to the
+/// T. `push` and `pop` can be used to add and remove elements from the front
+/// and back the same way. An equal read and write index signals, that the queue
+/// is empty. If the queue is full, the indices differ by one. This leads to the
 /// limitation that the queue needs I + 1 elements of storage. There is a slight
 /// performance benefit of using sizes where I + 1 equals a power of 2 because
 /// of the use of modulo math.

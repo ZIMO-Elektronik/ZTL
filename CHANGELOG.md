@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.22.0
+- Add `inplace_list` ([#14](https://github.com/ZIMO-Elektronik/ZTL/pull/14))
+
 ## 0.21.1
 - Bugfix `operator<=>` and `operator==` of `inplace_deque` and `inplace_vector` ([#13](https://github.com/ZIMO-Elektronik/ZTL/issues/13))
 
