@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <ztl/inplace_list.hpp>
 
+using t_list = ztl::inplace_list<int, 5uz>;
+
 TEST(inplace_list, ctor) {
   ztl::inplace_list<int, 1uz> default_ctor;
   EXPECT_EQ(size(default_ctor), 0uz);
@@ -27,26 +29,26 @@ TEST(inplace_list, ctor) {
 
 TEST(inplace_list, empty) {
   ztl::inplace_list<int, 2uz> list;
-  EXPECT_TRUE(list.empty());
+  EXPECT_TRUE(empty(list));
 
   list.push_back(1);
-  EXPECT_FALSE(list.empty());
+  EXPECT_FALSE(empty(list));
 }
 
 TEST(inplace_list, full) {
   ztl::inplace_list list{1, 2, 3};
-  EXPECT_TRUE(list.full());
+  EXPECT_TRUE(full(list));
 
   list.pop_back();
-  EXPECT_FALSE(list.full());
+  EXPECT_FALSE(full(list));
 }
 
 TEST(inplace_list, size) {
-  ztl::inplace_list<int, 5> list{1, 2, 3, 4};
-  EXPECT_EQ(list.size(), 4);
+  ztl::inplace_list<int, 5uz> list{1, 2, 3, 4};
+  EXPECT_EQ(size(list), 4);
 
   list.pop_back();
-  EXPECT_EQ(list.size(), 3);
+  EXPECT_EQ(size(list), 3);
 }
 
 TEST(inplace_list, front) {
@@ -61,8 +63,8 @@ TEST(inplace_list, back) {
 }
 
 TEST(inplace_list, insert) {
-  ztl::inplace_list<int, 5> list{1, 2, 3};
-  list.insert(++list.begin(), 4);
+  ztl::inplace_list<int, 5uz> list{1, 2, 3};
+  list.insert(++begin(list), 4);
 
   ztl::inplace_list expected{1, 4, 2, 3};
   ASSERT_TRUE(std::ranges::equal(list, expected));
@@ -70,7 +72,7 @@ TEST(inplace_list, insert) {
 
 TEST(inplace_list, erase) {
   ztl::inplace_list list{1, 2, 3, 4};
-  list.erase(++list.begin());
+  list.erase(++begin(list));
 
   ztl::inplace_list expected{1, 3, 4};
   ASSERT_TRUE(std::ranges::equal(list, expected));
@@ -78,13 +80,13 @@ TEST(inplace_list, erase) {
 
 TEST(inplace_list, move) {
   ztl::inplace_list list{1, 2, 3, 4};
-  list.move(list.begin(), list.end());
+  list.move(begin(list), end(list));
 
   ASSERT_TRUE(std::ranges::equal(list, ztl::inplace_list{2, 3, 4, 1}));
 }
 
 TEST(inplace_list, push_front) {
-  ztl::inplace_list<int, 5> list{1, 2, 3};
+  ztl::inplace_list<int, 5uz> list{1, 2, 3};
   list.push_front(4);
 
   ztl::inplace_list expected{4, 1, 2, 3};
@@ -92,7 +94,7 @@ TEST(inplace_list, push_front) {
 }
 
 TEST(inplace_list, push_back) {
-  ztl::inplace_list<int, 5> list{1, 2, 3};
+  ztl::inplace_list<int, 5uz> list{1, 2, 3};
   list.push_back(4);
 
   ztl::inplace_list expected{1, 2, 3, 4};
@@ -116,7 +118,6 @@ TEST(inplace_list, pop_back) {
 }
 
 TEST(inplace_list, spaceship) {
-  using t_list = ztl::inplace_list<int, 5>;
   t_list list{1, 2, 3, 4};
 
   t_list equal{list};
@@ -140,11 +141,9 @@ TEST(inplace_list, spaceship) {
 }
 
 TEST(inplace_list, integrity) {
-  using t_list = ztl::inplace_list<int, 5>;
-
   t_list list{1, 2, 3, 4, 5};
 
-  list.erase(++list.begin());
+  list.erase(++begin(list));
   t_list erased{1, 3, 4, 5};
   EXPECT_EQ(list, erased);
 

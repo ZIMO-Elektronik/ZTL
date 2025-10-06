@@ -14,18 +14,19 @@
 #include <array>
 #include <cstddef>
 #include <iterator>
+#include <numeric>
 #include "inplace_vector.hpp"
 #include "limits.hpp"
 #include "static_list.hpp"
 
 namespace ztl {
 
-/// inplace_list implements a doubly linked list. In contrast to std::list, no
+/// inplace_list implements a doubly linked list. In contrast to `std::list`, no
 /// allocation is made when inserting a new node. Instead, a fixed-size memory
 /// is provided internally.
 ///
 /// To mark the end-element, a dummy-link is constructed. This link (returned by
-/// e.g. end()) must not be dereferenced
+/// e.g. `end()`) must not be dereferenced
 ///
 /// \tparam T Type of element
 /// \tparam I Size
@@ -34,6 +35,7 @@ struct inplace_list {
   template<bool Const>
   struct _iterator {
     friend inplace_list<T, I>;
+
     // Types
     using value_type = T;
     using pointer = std::conditional_t<Const, value_type const*, value_type*>;
@@ -94,24 +96,16 @@ struct inplace_list {
   using reference = T&;
   using const_reference = value_type const&;
   using size_type = smallest_unsigned_t<I>;
-  using node_ = node<value_type>;
   using iterator = _iterator<false>;
   using const_iterator = _iterator<true>;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   // Construct/copy/destroy
-  constexpr inplace_list() {
-    std::generate_n(std::back_inserter(_free),
-                    _free.max_size(),
-                    [value = 0]() mutable { return value++; });
-  }
+  constexpr inplace_list() = default;
   template<std::convertible_to<T>... Ts>
   constexpr inplace_list(Ts&&... ts) requires(sizeof...(Ts) <= I)
   {
-    std::generate_n(std::back_inserter(_free),
-                    _free.max_size(),
-                    [value = 0]() mutable { return value++; });
     (push_back(static_cast<T>(ts)), ...);
   }
   constexpr inplace_list(inplace_list const& lhs)
@@ -169,12 +163,9 @@ struct inplace_list {
   constexpr void pop_back() { erase(iterator{_tail.prev}); }
   constexpr iterator insert(iterator pos, T const& t) {
     assert(!full());
-
     auto const index{_free.back()};
     _free.pop_back();
-
     _storage[index] = node<T>{t};
-
     _storage[index].prev = pos._link->prev;
     _storage[index].next = pos._link;
     pos._link->prev = pos._link->prev->next = &_storage[index];
@@ -182,12 +173,10 @@ struct inplace_list {
   }
   constexpr iterator erase(iterator pos) {
     assert(!empty());
-
     auto const tmp{pos._link->next};
     pos._link->prev->next = pos._link->next;
     pos._link->next->prev = pos._link->prev;
     pos._link->next = pos._link->prev = nullptr;
-
     _free.push_back(
       static_cast<size_type>((std::bit_cast<size_t>(pos._link) -
                               std::bit_cast<size_t>(_storage.data())) /
@@ -197,7 +186,6 @@ struct inplace_list {
   constexpr iterator move(iterator elem, iterator pos) {
     elem._link->prev->next = elem._link->next;
     elem._link->next->prev = elem._link->prev;
-
     elem._link->prev = pos._link->prev;
     elem._link->next = pos._link;
     pos._link->prev = pos._link->prev->next = elem._link;
@@ -262,8 +250,12 @@ struct inplace_list {
 private:
   detail::link _tail{&_tail, &_tail};
 
-  std::array<node_, I> _storage;
-  ztl::inplace_vector<size_type, I> _free;
+  std::array<node<value_type>, I> _storage{};
+  ztl::inplace_vector<size_type, I> _free{std::invoke(
+    []<size_type... Is>(std::integer_sequence<size_type, Is...>) {
+      return ztl::inplace_vector<size_type, I>{Is...};
+    },
+    std::make_integer_sequence<size_type, I>{})};
 };
 
 template<typename T, typename... Ts>
