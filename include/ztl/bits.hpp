@@ -10,24 +10,13 @@
 
 #pragma once
 
+#include <bit>
 #include <concepts>
 #include <cstdint>
 #include <type_traits>
 #include "limits.hpp"
 
 namespace ztl {
-
-/// Checks if a bitmask has only adjacent set bits
-///
-/// \tparam T Type of bitmask
-/// \param t  Bitmask
-/// \retval true  Bitmask contiguous
-/// \retval false Bitmask not contiguous
-template<std::unsigned_integral T>
-constexpr auto is_contiguous_bitmask(T const t) {
-  return (std::countl_zero(t) + std::countr_zero(t) + std::popcount(t)) ==
-         sizeof(T) * 8u;
-}
 
 /// Make mask from bit positions
 ///
@@ -45,9 +34,10 @@ template<std::unsigned_integral... Ts>
 ///
 /// \tparam Bits  Bit positions
 /// \return Mask for selected bits
-template<std::size_t... Bits>
-constexpr auto mask{
-  static_cast<smallest_unsigned_t<((1u << Bits) | ...)>>(((1u << Bits) | ...))};
+template<size_t... Bits>
+constexpr std::common_type_t<smallest_unsigned_t<((1ull << Bits) | ...)>,
+                             uint32_t>
+  mask{((1ull << Bits) | ...)};
 
 /// Make value for bitmask
 ///
@@ -78,63 +68,106 @@ template<typename T, typename U>
   return retval;
 }
 
+/// Count bit runs of adjacent set bits
+///
+/// \tparam T     Type of bitmask
+/// \param  mask  Bitmask
+template<std::unsigned_integral T>
+constexpr auto runs_count(T mask) noexcept {
+  return std::popcount(static_cast<T>(mask & ~(mask << 1u)));
+}
+
+namespace detail {
+
+/// Create bit runs from a bitmask
+///
+/// Creates pairs of start and length of bit runs (groups of adjacent set bits).
+/// E.g. 0b1011011u = {0, 2}, {3, 2}, {6, 1}
+///
+/// \tparam Mask  Bitmask
+/// \return Pair of start and length of bit runs
+template<auto Mask>
+requires(std::unsigned_integral<decltype(Mask)> && Mask != 0u)
+consteval auto mask_runs() {
+  constexpr auto starts{static_cast<size_t>(Mask & ~(Mask << 1u))};
+  std::array<std::pair<size_t, size_t>,
+             static_cast<size_t>(std::popcount(starts))>
+    retval{};
+  auto remaining{starts};
+  size_t i{};
+  while (remaining) {
+    auto const start{static_cast<size_t>(std::countr_zero(remaining))};
+    auto const length{static_cast<size_t>(
+      std::countr_zero(static_cast<size_t>(~(Mask >> start))))};
+    retval[i++] = {start, length};
+    remaining = remaining & (remaining - 1u);
+  }
+  return retval;
+}
+
+} // namespace detail
+
 /// Map value to bitmask
 ///
 /// This function takes a <bitmask, value> pair and maps the value to the set
 /// bits of the mask.
-///
 /// E.g. (0b1101, 0b0101) = 0b1001
-///
 /// If the value has more bits than the mask, every bit above the masks MSB is
 /// ignored.
 ///
 /// \tparam Mask  Bitmask
-/// \tparam U     Type of value
+/// \tparam R     Return type
+/// \tparam T     Type of value
 /// \param  value Value
 /// \return Mapped value
-template<std::size_t Mask, std::unsigned_integral U>
-constexpr auto map_value_to(U value) {
-  using RetType = smallest_unsigned_t<Mask>;
-  if (is_contiguous_bitmask(Mask)) // Help with optimisation
-    return static_cast<RetType>((value << std::countr_zero(Mask)) & Mask);
-
-  RetType retval{};
-  for (auto i{0u}; i < sizeof(RetType) * 8u; ++i)
-    // If bit on position is set, shift into retval
-    if (Mask & (1u << i)) {
-      retval |= static_cast<RetType>((value & 1u) << i);
-      value >>= 1u;
+template<auto Mask, typename R = decltype(Mask), std::unsigned_integral T>
+requires(std::unsigned_integral<R> && Mask != 0u)
+constexpr auto map_value_to(T value) {
+  // Single shift due to single run
+  if constexpr (runs_count(Mask) == 1uz)
+    return static_cast<R>((value << std::countr_zero(Mask)) & Mask);
+  // Multiple shifts
+  else {
+    constexpr auto runs{detail::mask_runs<Mask>()};
+    R retval{};
+    for (auto [start, length] : runs) {
+      retval |= (value & ((static_cast<R>(1u) << length) - 1u)) << start;
+      value >>= length;
     }
-  return retval;
+    return retval;
+  }
 }
 
-/// Map value from bitmask - Reverts the map_value_to operation
+/// Map value from bitmask - reverts the map_value_to operation
 ///
-/// \details  Takes a <bitmask, bitfield> pair and re-maps into a value using
-///           the bitmask
+/// Takes a <bitmask, bitfield> pair and re-maps into a value using the bitmask.
+/// E.g. (0b1101, 0b1001) = 0b0101
+/// Everything above the MSB of the bitmask is ignored.
 ///
-///           E.g. (0b1101, 0b1001) = 0b0101
-///
-///           Everything above the MSB of the bitmask is ignored.
-///
-/// \tparam Mask    Bitmask
-/// \tparam U       Type of value
-/// \param value    Value
+/// \tparam Mask  Bitmask
+/// \tparam R     Return type
+/// \tparam T     Type of value
+/// \param  value Value
 /// \return Remapped value
-template<std::size_t Mask, std::unsigned_integral U>
-constexpr auto map_value_from(U value) {
-  using RetType = smallest_unsigned_t<1 << std::popcount(Mask)>;
-  if (is_contiguous_bitmask(Mask)) // Help with optimisation
-    return static_cast<RetType>((value & Mask) >> std::countr_zero(Mask));
-
-  RetType retval{};
-  // If bit on position is set, shift into retval
-  for (int i{sizeof(RetType) * 8 - 1}; i >= 0; --i)
-    if (Mask & (1u << i)) {
-      retval = static_cast<RetType>(retval << 1u);
-      retval |= static_cast<RetType>(static_cast<RetType>(value >> i) & 1u);
+template<auto Mask, typename R = decltype(Mask), std::unsigned_integral T>
+requires(std::unsigned_integral<R> && Mask != 0u)
+constexpr auto map_value_from(T value) {
+  // Single shift due to single run
+  if constexpr (runs_count(Mask) == 1uz)
+    return static_cast<R>((value & Mask) >> std::countr_zero(Mask));
+  // Multiple shifts
+  else {
+    constexpr auto runs{detail::mask_runs<Mask>()};
+    R retval{};
+    size_t shift{};
+    for (auto [start, length] : runs) {
+      retval |=
+        (static_cast<R>(value >> start) & ((static_cast<R>(1u) << length) - 1u))
+        << shift;
+      shift += length;
     }
-  return retval;
+    return retval;
+  }
 }
 
 } // namespace ztl

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0
+- Add `mask`, `map_value_to` and `map_value_from` bit operations ([#15](https://github.com/ZIMO-Elektronik/ZTL/pull/15))
+- Bugfix `inplace_list` move to same position causes loop ([#16](https://github.com/ZIMO-Elektronik/ZTL/pull/16))
+
 ## 0.22.0
 - Add `inplace_list` ([#14](https://github.com/ZIMO-Elektronik/ZTL/pull/14))
 
