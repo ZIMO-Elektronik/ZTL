@@ -85,6 +85,13 @@ TEST(inplace_list, move) {
   ASSERT_TRUE(std::ranges::equal(list, ztl::inplace_list{2, 3, 4, 1}));
 }
 
+TEST(inplace_list, move_same_pos) {
+  ztl::inplace_list list{1, 2, 3, 4};
+  list.move(begin(list), begin(list));
+
+  ASSERT_TRUE(std::ranges::equal(list, ztl::inplace_list{1, 2, 3, 4}));
+}
+
 TEST(inplace_list, push_front) {
   ztl::inplace_list<int, 5uz> list{1, 2, 3};
   list.push_front(4);

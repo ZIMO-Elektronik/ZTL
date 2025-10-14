@@ -184,6 +184,8 @@ struct inplace_list {
     return iterator{tmp};
   }
   constexpr iterator move(iterator elem, iterator pos) {
+    if (elem == pos) return elem;
+
     elem._link->prev->next = elem._link->next;
     elem._link->next->prev = elem._link->prev;
     elem._link->prev = pos._link->prev;
