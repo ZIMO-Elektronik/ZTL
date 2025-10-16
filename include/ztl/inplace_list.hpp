@@ -15,6 +15,8 @@
 #include <cstddef>
 #include <iterator>
 #include <numeric>
+#include <ranges>
+#include "concepts.hpp"
 #include "inplace_vector.hpp"
 #include "limits.hpp"
 #include "static_list.hpp"
@@ -157,10 +159,63 @@ struct inplace_list {
   constexpr const_reference at(size_type i) const { return at(); }
 
   // Modifiers
-  constexpr void push_front(T const& t) { insert(begin(), t); }
+  constexpr reference push_front(T const& t) { return *insert(begin(), t); }
   constexpr void pop_front() { erase(begin()); }
-  constexpr void push_back(T const& t) { insert(end(), t); }
+
+  constexpr reference push_back(T const& t) { return *insert(end(), t); }
   constexpr void pop_back() { erase(iterator{_tail.prev}); }
+
+  template<class... Args>
+  constexpr reference emplace_front(Args&&... args) {
+    return *emplace(begin(), args...);
+  }
+  template<class... Args>
+  constexpr reference emplace_back(Args&&... args) {
+    return *emplace(end(), args...);
+  }
+  template<class... Args>
+  constexpr pointer try_emplace_front(Args&&... args) {
+    if (full()) return nullptr;
+    return &unchecked_emplace_front(args...);
+  }
+  template<class... Args>
+  constexpr pointer try_emplace_back(Args&&... args) {
+    if (full()) return nullptr;
+    return &unchecked_emplace_back(args...);
+  }
+  template<class... Args>
+  constexpr reference unchecked_emplace_front(Args&&... args) {
+    return *emplace(begin(), args...);
+  }
+  template<class... Args>
+  constexpr reference unchecked_emplace_back(Args&&... args) {
+    return *emplace(end(), args...);
+  }
+  template<class... Args>
+  constexpr iterator emplace(iterator pos, Args&&... args) {
+    assert(!full());
+    auto const index{_free.back()};
+    _free.pop_back();
+    new (&_storage[index]) node<value_type>(args...);
+    _storage[index].prev = pos._link->prev;
+    _storage[index].next = pos._link;
+    pos._link->prev = pos._link->prev->next = &_storage[index];
+    return iterator{&_storage[index]};
+  }
+  template<container_compatible_range<T> R>
+  constexpr void prepend_range(R&& r) {
+    return insert_range(begin(), r);
+  }
+  template<container_compatible_range<T> R>
+  constexpr void append_range(R&& r) {
+    return insert_range(end(), r);
+  }
+  template<container_compatible_range<T> R>
+  constexpr void insert_range(iterator pos, R&& r) {
+    auto first{r.begin()};
+    auto const end{r.end()};
+    while (first != end) emplace(pos, *first++);
+  }
   constexpr iterator insert(iterator pos, T const& t) {
     assert(!full());
     auto const index{_free.back()};
@@ -171,6 +226,7 @@ struct inplace_list {
     pos._link->prev = pos._link->prev->next = &_storage[index];
     return iterator{&_storage[index]};
   }
+
   constexpr iterator erase(iterator pos) {
     assert(!empty());
     auto const tmp{pos._link->next};
@@ -203,6 +259,8 @@ struct inplace_list {
       first = next;
     }
   }
+
+  // Operations
   template<typename F>
   constexpr void remove_if(F&& f) {
     iterator first{begin()};
@@ -212,6 +270,16 @@ struct inplace_list {
       ++next;
       if (f(*first)) erase(first);
       first = next;
+    }
+  }
+  constexpr void unique() {
+    iterator first{begin()};
+    iterator const last{end()};
+    while (first != last) {
+      iterator next = first;
+      ++next;
+      if (*first == *next) erase(next);
+      else ++first;
     }
   }
 
@@ -312,16 +380,6 @@ constexpr auto ssize(inplace_list<T, I> const& c)
   using R =
     std::common_type_t<ptrdiff_t, std::make_signed_t<decltype(c.size())>>;
   return static_cast<R>(c.size());
-}
-
-// Data access
-template<typename T, size_t I>
-constexpr auto data(inplace_list<T, I>& c) -> decltype(c.data()) {
-  return c.data();
-}
-template<typename T, size_t I>
-constexpr auto data(inplace_list<T, I> const& c) -> decltype(c.data()) {
-  return c.data();
 }
 
 } // namespace ztl

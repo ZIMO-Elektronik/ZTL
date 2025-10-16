@@ -11,15 +11,15 @@ protected:
   using List = ztl::static_list<size_t>;
   using Node = ztl::node<size_t>;
 
-  Node _node38{38};
-  Node _node39{39};
-  Node _node40{40};
-  Node _node41{41};
-  Node _node42{42};
-  Node _node43{43};
-  Node _node44{44};
-  Node _node45{45};
-  Node _node46{46};
+  Node _node38{38u};
+  Node _node39{39u};
+  Node _node40{40u};
+  Node _node41{41u};
+  Node _node42{42u};
+  Node _node43{43u};
+  Node _node44{44u};
+  Node _node45{45u};
+  Node _node46{46u};
 };
 
 } // namespace

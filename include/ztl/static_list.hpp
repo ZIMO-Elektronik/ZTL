@@ -32,7 +32,9 @@ struct link {
 template<typename T>
 struct node : detail::link {
   constexpr node() = default;
-  constexpr node(T element) : _element{element} {}
+  template<class... Args>
+  requires std::constructible_from<T, Args...>
+  constexpr node(Args&&... args) : _element{args...} {}
   T _element;
 };
 

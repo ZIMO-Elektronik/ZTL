@@ -70,6 +70,23 @@ TEST(inplace_list, insert) {
   ASSERT_TRUE(std::ranges::equal(list, expected));
 }
 
+TEST(inplace_list, emplace) {
+  ztl::inplace_list<int, 5uz> list{1, 2, 3};
+  list.emplace(++begin(list), 4);
+
+  ztl::inplace_list expected{1, 4, 2, 3};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, insert_range) {
+  ztl::inplace_list<int, 10uz> list{1, 2, 3};
+  auto const insert_list{list};
+  list.insert_range(++list.begin(), insert_list);
+
+  ztl::inplace_list expected{1, 1, 2, 3, 2, 3};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
 TEST(inplace_list, erase) {
   ztl::inplace_list list{1, 2, 3, 4};
   list.erase(++begin(list));
@@ -121,6 +138,86 @@ TEST(inplace_list, pop_back) {
   list.pop_back();
 
   ztl::inplace_list expected{1, 2, 3};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, emplace_front) {
+  ztl::inplace_list<int, 5uz> list{2, 3, 4};
+  list.emplace_front(1);
+
+  ztl::inplace_list expected{1, 2, 3, 4};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, try_emplace_front) {
+  ztl::inplace_list list{1, 2, 3, 4};
+
+  ASSERT_EQ(list.try_emplace_front(4), nullptr);
+
+  list.pop_back();
+
+  auto const ptr{list.try_emplace_front(4)};
+  ASSERT_NE(ptr, nullptr);
+  ASSERT_EQ(*ptr, 4);
+
+  ztl::inplace_list expected{4, 1, 2, 3};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, emplace_back) {
+  ztl::inplace_list<int, 5uz> list{1, 2, 3};
+  list.emplace_back(4);
+
+  ztl::inplace_list expected{1, 2, 3, 4};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, try_emplace_back) {
+  ztl::inplace_list list{1, 2, 3, 4};
+
+  ASSERT_EQ(list.try_emplace_back(1), nullptr);
+
+  list.pop_front();
+
+  auto const ptr{list.try_emplace_back(1)};
+  ASSERT_NE(ptr, nullptr);
+  ASSERT_EQ(*ptr, 1);
+
+  ztl::inplace_list expected{2, 3, 4, 1};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, prepend_range) {
+  ztl::inplace_list<int, 10uz> list{1, 2, 3};
+  ztl::inplace_list prepend{4, 5, 6};
+  list.prepend_range(prepend);
+
+  ztl::inplace_list expected{4, 5, 6, 1, 2, 3};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, append_range) {
+  ztl::inplace_list<int, 10uz> list{1, 2, 3};
+  ztl::inplace_list append{4, 5, 6};
+  list.append_range(append);
+
+  ztl::inplace_list expected{1, 2, 3, 4, 5, 6};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, remove_if) {
+  ztl::inplace_list list{1, 2, 2, 3, 4};
+  list.remove_if([&](auto const& e) { return e == 2; });
+
+  ztl::inplace_list expected{1, 3, 4};
+  ASSERT_TRUE(std::ranges::equal(list, expected));
+}
+
+TEST(inplace_list, unique) {
+  ztl::inplace_list list{1, 2, 2, 3, 4, 4, 4, 5};
+  list.unique();
+
+  ztl::inplace_list expected{1, 2, 3, 4, 5};
   ASSERT_TRUE(std::ranges::equal(list, expected));
 }
 
