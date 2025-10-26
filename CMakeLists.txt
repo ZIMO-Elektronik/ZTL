@@ -19,13 +19,13 @@ add_library(ZTL::ZTL ALIAS ZTL)
 
 target_compile_features(ZTL INTERFACE cxx_std_23)
 
-if(PROJECT_IS_TOP_LEVEL)
+# https://github.com/espressif/esp-idf/issues/17773
+if(PROJECT_IS_TOP_LEVEL AND NOT ESP_PLATFORM)
   target_include_directories(ZTL INTERFACE include)
+  target_common_warnings(ZTL INTERFACE)
 else()
   target_include_directories(ZTL SYSTEM INTERFACE include)
 endif()
-
-target_common_warnings(ZTL INTERFACE)
 
 if(PROJECT_IS_TOP_LEVEL)
   include(CTest)

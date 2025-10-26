@@ -265,7 +265,7 @@ struct inplace_deque {
     else _rd = static_cast<size_type>(_rd ? _rd - 1uz : I);
     _data[_rd] = std::move(value);
   }
-  [[deprecated]] constexpr void push_front() {
+  constexpr void push_front() {
     assert(!full());
     if constexpr (std::has_single_bit(I + 1uz)) _rd = (_rd - 1) % (I + 1uz);
     else _rd = _rd ? _rd - 1 : I;
@@ -284,7 +284,7 @@ struct inplace_deque {
     _data[_wr] = std::move(value);
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }
-  [[deprecated]] constexpr void push_back() {
+  constexpr void push_back() {
     assert(!full());
     _wr = static_cast<size_type>((_wr + 1uz) % (I + 1uz));
   }

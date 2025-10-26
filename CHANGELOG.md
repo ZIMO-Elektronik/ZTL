@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.23.1
+- Add workaround for Espressif's misuse of CMake ([#17773](https://github.com/espressif/esp-idf/issues/17773))
+
 ## 0.23.0
 - Add `mask`, `map_value_to` and `map_value_from` bit operations ([#15](https://github.com/ZIMO-Elektronik/ZTL/pull/15))
 - Bugfix `inplace_list` move to same position causes loop ([#16](https://github.com/ZIMO-Elektronik/ZTL/pull/16))
