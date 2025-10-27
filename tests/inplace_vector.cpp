@@ -73,15 +73,15 @@ TEST(inplace_vector, three_way_comparison) {
   c.push_back(4);
 
   // ==
-  EXPECT_TRUE((a <=> b) == 0);
+  EXPECT_TRUE((a <=> b) == std::strong_ordering::equal);
   EXPECT_TRUE(a == b);
 
   // <
-  EXPECT_TRUE((a <=> c) < 0);
+  EXPECT_TRUE((a <=> c) == std::strong_ordering::less);
   EXPECT_FALSE(a == c);
 
   // >
-  EXPECT_TRUE((c <=> a) > 0);
+  EXPECT_TRUE((c <=> a) == std::strong_ordering::greater);
   EXPECT_FALSE(c == a);
 
   // shorter vector test
@@ -89,6 +89,6 @@ TEST(inplace_vector, three_way_comparison) {
   d.push_back(1);
   d.push_back(2);
 
-  EXPECT_TRUE((d <=> a) < 0);
-  EXPECT_TRUE((a <=> d) > 0);
+  EXPECT_TRUE((d <=> a) == std::strong_ordering::less);
+  EXPECT_TRUE((a <=> d) == std::strong_ordering::greater);
 }

@@ -498,15 +498,15 @@ TEST(inplace_deque, three_way_comparison) {
   c.push_back(4);
 
   // ==
-  EXPECT_TRUE((a <=> b) == 0);
+  EXPECT_TRUE((a <=> b) == std::strong_ordering::equal);
   EXPECT_TRUE(a == b);
 
   // <
-  EXPECT_TRUE((a <=> c) < 0);
+  EXPECT_TRUE((a <=> c) == std::strong_ordering::less);
   EXPECT_FALSE(a == c);
 
   // >
-  EXPECT_TRUE((c <=> a) > 0);
+  EXPECT_TRUE((c <=> a) == std::strong_ordering::greater);
   EXPECT_FALSE(c == a);
 
   // Prefix comparison: d = [1, 2]
@@ -514,8 +514,8 @@ TEST(inplace_deque, three_way_comparison) {
   d.push_back(1);
   d.push_back(2);
 
-  EXPECT_TRUE((d <=> a) < 0);
-  EXPECT_TRUE((a <=> d) > 0);
+  EXPECT_TRUE((d <=> a) == std::strong_ordering::less);
+  EXPECT_TRUE((a <=> d) == std::strong_ordering::greater);
 
   // Reverse order: e = [3, 2, 1]
   ztl::inplace_deque<int, 10uz> e;
@@ -523,6 +523,8 @@ TEST(inplace_deque, three_way_comparison) {
   e.push_front(2);
   e.push_front(3);
 
-  EXPECT_TRUE((e <=> a) > 0); // [3,2,1] > [1,2,3] lexicographically
+  EXPECT_TRUE(
+    (e <=> a) ==
+    std::strong_ordering::greater); // [3,2,1] > [1,2,3] lexicographically
   EXPECT_FALSE(e == a);
 }

@@ -128,23 +128,23 @@ TEST(inplace_list, spaceship) {
   t_list list{1, 2, 3, 4};
 
   t_list equal{list};
-  EXPECT_TRUE((list <=> equal) == 0);
-  EXPECT_TRUE((equal <=> list) == 0);
+  EXPECT_TRUE((list <=> equal) == std::strong_ordering::equal);
+  EXPECT_TRUE((equal <=> list) == std::strong_ordering::equal);
   EXPECT_TRUE(list == equal);
 
   t_list lesser{1, 2, 2, 4};
-  EXPECT_TRUE((list <=> lesser) > 0);
-  EXPECT_TRUE((lesser <=> list) < 0);
+  EXPECT_TRUE((list <=> lesser) == std::strong_ordering::greater);
+  EXPECT_TRUE((lesser <=> list) == std::strong_ordering::less);
   EXPECT_FALSE(list == lesser);
 
   t_list greater{1, 2, 4, 4};
-  EXPECT_TRUE((list <=> greater) < 0);
-  EXPECT_TRUE((greater <=> list) > 0);
+  EXPECT_TRUE((list <=> greater) == std::strong_ordering::less);
+  EXPECT_TRUE((greater <=> list) == std::strong_ordering::greater);
   EXPECT_FALSE(list == greater);
 
   t_list shorter{1, 2, 3};
-  EXPECT_TRUE((list <=> shorter) > 0);
-  EXPECT_TRUE((shorter <=> list) < 0);
+  EXPECT_TRUE((list <=> shorter) == std::strong_ordering::greater);
+  EXPECT_TRUE((shorter <=> list) == std::strong_ordering::less);
 }
 
 TEST(inplace_list, integrity) {

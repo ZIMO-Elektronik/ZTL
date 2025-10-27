@@ -53,9 +53,11 @@ constexpr uint32_t ceil_log2(uint32_t value) {
 /// \param  y2  Part of interval(y1, y2)
 /// \return Interpolated value
 template<typename T>
+requires std::integral<T> || std::floating_point<T>
 constexpr T lerp(T x, T x1, T x2, T y1, T y2) {
-  if (x1 == x2) return y1;
-  else return y1 + ((y2 - y1) * (x - x1)) / (x2 - x1);
+  if constexpr (std::integral<T>)
+    if (x1 == x2) return y1;
+  return y1 + ((y2 - y1) * (x - x1)) / (x2 - x1);
 }
 
 /// Power of 2
