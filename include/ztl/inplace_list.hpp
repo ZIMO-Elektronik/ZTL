@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <functional>
 #include <iterator>
 #include <numeric>
 #include <ranges>
@@ -113,7 +114,6 @@ struct inplace_list {
   constexpr inplace_list(inplace_list const& lhs)
     : _storage{lhs._storage}, _free{lhs._free} {
     if (lhs.empty()) return;
-
     // Recalculate links
     auto it{lhs.begin()};
     for (; it != lhs.end(); it++) {
