@@ -13,6 +13,7 @@
 #include <array>
 #include <bit>
 #include <concepts>
+#include <cstddef>
 #include <cstdint>
 #include <type_traits>
 #include <utility>

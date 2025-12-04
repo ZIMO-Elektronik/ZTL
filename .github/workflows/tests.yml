@@ -11,5 +11,5 @@ jobs:
     uses: ZIMO-Elektronik/.github-workflows/.github/workflows/x86_64-linux-gnu-gcc.yml@v0.2.0
     with:
       args: -DCMAKE_BUILD_TYPE=Debug
-      target: ZTLTests
+      target: ZTLIncludeWhatYouMust ZTLTests
       post-build: ctest --test-dir build --schedule-random --timeout 86400

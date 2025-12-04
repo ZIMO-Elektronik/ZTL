@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.24.0
+- Add `emplace` variants and `*_range` insert variants to `inplace_list`
+
 ## 0.23.1
 - Add workaround for Espressif's misuse of CMake ([#17773](https://github.com/espressif/esp-idf/issues/17773))
 
