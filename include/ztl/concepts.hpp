@@ -11,6 +11,7 @@
 #pragma once
 
 #include <concepts>
+#include <ranges>
 #include "meta.hpp"
 #include "utility.hpp"
 
@@ -18,5 +19,10 @@ namespace ztl {
 
 template<typename T>
 concept chrono_duration = is_chrono_duration_v<T>;
+
+template<class R, class T>
+concept container_compatible_range =
+  std::ranges::input_range<R> &&
+  std::convertible_to<std::ranges::range_reference_t<R>, T>;
 
 } // namespace ztl
