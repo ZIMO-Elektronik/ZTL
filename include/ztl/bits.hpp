@@ -29,8 +29,9 @@ namespace ztl {
 ///
 /// \deprecated Use mask<Bits...> instead
 template<std::unsigned_integral... Ts>
-[[deprecated]] constexpr uint32_t make_mask(Ts... bits) {
-  return ((1u << bits) | ...);
+constexpr auto make_mask(Ts... bits) {
+  using R = std::common_type_t<Ts..., uint32_t>;
+  return ((R{1u} << bits) | ...);
 }
 
 /// Make mask from bit positions

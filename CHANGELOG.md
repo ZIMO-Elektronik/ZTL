@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.24.1
+- Undeprecate `ztl::make_mask` for runtime values
+
 ## 0.24.0
 - Add `emplace` variants and `*_range` insert variants to `inplace_list`
 
