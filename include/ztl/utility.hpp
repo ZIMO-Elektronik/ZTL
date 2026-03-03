@@ -193,7 +193,7 @@ consteval uint32_t index_sequence2mask(std::index_sequence<Is...>) {
 /// \tparam T       Type of class
 /// \tparam F       Type of member function
 /// \return Trampoline
-template<[[maybe_unused]] auto Unique = [] {}, typename T, typename F>
+template<auto Unique = [] {}, typename T, typename F>
 constexpr auto make_trampoline(T&& t, F&& f) {
   using Args = signature<F>::args;
   static T _t;
@@ -211,7 +211,7 @@ constexpr auto make_trampoline(T&& t, F&& f) {
 /// \tparam Unique  Type that guarantees uniqueness for each use
 /// \tparam F       Type of function object
 /// \return Trampoline
-template<[[maybe_unused]] auto Unique = [] {}, typename F>
+template<auto Unique = [] {}, typename F>
 constexpr auto make_trampoline(F&& f) {
   using Args = signature<F>::args;
   static std::optional<F> _f;
