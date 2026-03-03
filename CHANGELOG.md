@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.24.2
+- Fix remove wrong attribute-specifier syntax `[[maybe_unused]]` attribute
+
 ## 0.24.1
 - Undeprecate `ztl::make_mask` for runtime values
 
