@@ -28,7 +28,7 @@ TEST(moving_average, moving_average) {
     avg += 100;
     EXPECT_EQ(avg, 58);
 
-    for (auto i{0u}; i < 10; ++i) avg += 100;
+    for (auto i{0uz}; i < 10uz; ++i) avg += 100;
 
     EXPECT_EQ(avg, 86);
   }
@@ -57,7 +57,7 @@ TEST(moving_average, moving_average) {
     avg += 100;
     EXPECT_EQ(avg, 61);
 
-    for (auto i{0u}; i < 10; ++i) avg += 100;
+    for (auto i{0uz}; i < 10uz; ++i) avg += 100;
 
     EXPECT_EQ(avg, 90);
   }

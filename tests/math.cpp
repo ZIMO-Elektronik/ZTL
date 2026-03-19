@@ -39,17 +39,27 @@ TEST(math, make_linspace) {
   constexpr auto error{0.001};
 
   {
-    constexpr auto values{ztl::make_linspace<7u>(13.7, 19.83)};
+    constexpr auto values{ztl::make_linspace<7uz>(13.7, 19.83)};
     constexpr std::array expected{
       13.700, 14.722, 15.743, 16.765, 17.787, 18.808, 19.830};
-    for (auto i{0u}; i < size(values); ++i)
+    for (auto i{0uz}; i < size(values); ++i)
       EXPECT_NEAR(values[i], expected[i], error);
   }
 
   {
-    constexpr auto values{ztl::make_linspace<3u>(13, 100)};
+    constexpr auto values{ztl::make_linspace<3uz>(13, 100)};
     constexpr std::array expected{13, 56, 100};
-    for (auto i{0u}; i < size(values); ++i)
+    EXPECT_EQ(expected, values);
+  }
+}
+
+TEST(math, make_logspace) {
+  constexpr auto error{0.001};
+
+  {
+    constexpr auto values{ztl::make_logspace<3uz>(1.2, 3.7)};
+    constexpr std::array expected{15.849, 281.838, 5011.872};
+    for (auto i{0uz}; i < size(values); ++i)
       EXPECT_NEAR(values[i], expected[i], error);
   }
 }

@@ -85,22 +85,42 @@ constexpr int32_t sign(T value) {
   else return 0;
 }
 
-/// Make an array with N linearly spaced elements between START and END
+/// Make an array with N linearly spaced elements between a and b
 ///
-/// \tparam N     Number of elements
-/// \tparam T     Type of values
-/// \param  start First value
-/// \param  end   Last value
+/// \tparam N Number of elements
+/// \tparam T Type of values
+/// \param  a First value
+/// \param  b Last value
 /// \return Linspace array
 template<size_t N, typename T>
-constexpr auto make_linspace(T start, T end) requires(N >= 1u)
+constexpr auto make_linspace(T a, T b) requires(N >= 1uz)
 {
-  if constexpr (N == 1u) return end;
+  if constexpr (N == 1uz) return std::array<T, N>{b};
   else
     return std::invoke(
       [&]<size_t... Is>(std::index_sequence<Is...>) {
-        return std::array<T, N>{start + static_cast<T>(Is) * (end - start) /
-                                          static_cast<T>(N - 1u)...};
+        return std::array<T, N>{a + static_cast<T>(Is) * (b - a) /
+                                      static_cast<T>(N - 1uz)...};
+      },
+      std::make_index_sequence<N>{});
+}
+
+/// Make an array with N logarithmically spaced elements between 10^a and 10^b
+///
+/// \tparam N Number of elements
+/// \tparam T Type of values
+/// \param  a First exponent
+/// \param  b Last exponent
+/// \return Logspace array
+template<size_t N, std::floating_point T>
+constexpr auto make_logspace(T a, T b) requires(N >= 1uz)
+{
+  if constexpr (N == 1uz) return std::array<T, N>{std::pow(10, b)};
+  else
+    return std::invoke(
+      [&]<size_t... Is>(std::index_sequence<Is...>) {
+        return std::array<T, N>{std::pow(
+          10, a + static_cast<T>(Is) * (b - a) / static_cast<T>(N - 1uz))...};
       },
       std::make_index_sequence<N>{});
 }

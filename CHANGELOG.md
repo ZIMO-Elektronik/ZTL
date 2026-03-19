@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.25.0
+- Add `make_logspace` to `<math.hpp>`
+
 ## 0.24.2
 - Fix remove wrong attribute-specifier syntax `[[maybe_unused]]` attribute
 
