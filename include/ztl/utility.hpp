@@ -16,7 +16,9 @@
 #include "bits.hpp"
 #include "type_traits.hpp"
 
-// Make std::integer_sequence tuple-like accessible
+// https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2025/p1789r2.pdf
+#if !defined(__glibcxx_integer_sequence) || __glibcxx_integer_sequence < 202511L
+
 namespace std {
 
 template<typename T, T... Is>
@@ -24,11 +26,20 @@ struct tuple_size<integer_sequence<T, Is...>>
   : integral_constant<size_t, sizeof...(Is)> {};
 
 template<size_t I, typename T, T... Is>
+requires(I < sizeof...(Is))
 struct tuple_element<I, integer_sequence<T, Is...>> {
-  using type = tuple_element_t<I, tuple<integral_constant<T, Is>...>>;
+  using type = T;
 };
 
+template<size_t I, typename T, T... Is>
+requires(I < sizeof...(Is))
+constexpr T get(integer_sequence<T, Is...>) noexcept {
+  return get<I>(tuple{Is...});
+}
+
 } // namespace std
+
+#endif
 
 namespace ztl {
 
@@ -82,19 +93,6 @@ template<typename T, T I, typename U, U J>
 constexpr auto operator/(std::integral_constant<T, I>,
                          std::integral_constant<U, J>) {
   return std::integral_constant<std::common_type_t<T, U>, I / J>{};
-}
-
-/// Extracts the Ith element from an integer sequence
-///
-/// \tparam I                               Element to access
-/// \tparam T                               Type of integer sequence
-/// \tparam Is...                           Integers
-/// \param  std::integer_sequence<T, Is...> Integer sequence
-/// \return Selected element of integer sequence
-template<size_t I, typename T, T... Is>
-constexpr auto get(std::integer_sequence<T, Is...>) {
-  static_assert(I < sizeof...(Is));
-  return std::tuple_element_t<I, std::integer_sequence<T, Is...>>{};
 }
 
 namespace detail {
