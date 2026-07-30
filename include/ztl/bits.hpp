@@ -31,7 +31,7 @@ namespace ztl {
 template<std::unsigned_integral... Ts>
 constexpr auto make_mask(Ts... bits) {
   using R = std::common_type_t<Ts..., uint32_t>;
-  return ((R{1u} << bits) | ...);
+  return (R{0} | ... | (R{1} << bits));
 }
 
 /// Make mask from bit positions
@@ -39,9 +39,9 @@ constexpr auto make_mask(Ts... bits) {
 /// \tparam Bits  Bit positions
 /// \return Mask for selected bits
 template<size_t... Bits>
-constexpr std::common_type_t<smallest_unsigned_t<((1ull << Bits) | ...)>,
+constexpr std::common_type_t<smallest_unsigned_t<(0ull | ... | (1ull << Bits))>,
                              uint32_t>
-  mask{((1ull << Bits) | ...)};
+  mask{(0ull | ... | (1ull << Bits))};
 
 /// Make value for bitmask
 ///

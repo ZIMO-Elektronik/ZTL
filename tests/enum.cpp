@@ -46,7 +46,7 @@ TEST(enum, logical_not) {
   constexpr auto a{E::A};
   constexpr auto null{a ^ E::A};
   EXPECT_TRUE(!!a);
-  EXPECT_FALSE(null);
+  EXPECT_FALSE(!!null);
 }
 
 TEST(enum, operator_or) {

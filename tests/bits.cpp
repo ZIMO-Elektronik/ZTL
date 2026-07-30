@@ -3,6 +3,7 @@
 #include <ztl/bits.hpp>
 
 TEST(bits, mask) {
+  EXPECT_EQ(ztl::mask<>, 0u);
   EXPECT_EQ(ztl::mask<0u>, 1u << 0u);
   EXPECT_EQ(ztl::mask<1u>, 1u << 1u);
   EXPECT_EQ((ztl::mask<7u, 3u>), 1u << 7u | 1u << 3u);
@@ -21,6 +22,7 @@ TEST(bits, mask) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 TEST(bits, deprecated_make_mask) {
+  EXPECT_EQ(ztl::make_mask(), 0u);
   EXPECT_EQ(ztl::make_mask(0u), 1u << 0u);
   EXPECT_EQ(ztl::make_mask(1u), 1u << 1u);
   EXPECT_EQ(ztl::make_mask(7u, 3u), 1u << 7u | 1u << 3u);

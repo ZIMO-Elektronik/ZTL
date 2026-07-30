@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.25.2
+- Bugfix `ztl::mask` and `ztl::make_mask` may contain no bits ([#22](https://github.com/ZIMO-Elektronik/ZTL/issues/22))
+
 ## 0.25.1
 - Bugfix guard `std::integer_sequence` support for structured bindings ([#20](https://github.com/ZIMO-Elektronik/ZTL/issues/20))
 
