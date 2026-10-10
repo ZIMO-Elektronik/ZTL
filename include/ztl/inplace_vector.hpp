@@ -42,7 +42,7 @@ struct inplace_vector {
   // Construct/copy/destroy
   constexpr inplace_vector() = default;
   template<std::convertible_to<T>... Ts>
-  constexpr inplace_vector(Ts&&... ts) requires(sizeof...(Ts) <= I)
+  explicit constexpr inplace_vector(Ts&&... ts) requires(sizeof...(Ts) <= I)
     : _data{static_cast<T>(ts)...}, _size{sizeof...(Ts)} {}
 
   // Iterators

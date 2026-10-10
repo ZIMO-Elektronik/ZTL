@@ -1,7 +1,10 @@
 # Changelog
 
+## 0.25.3
+- Bugfix make variadic constructors of `inplace_deque`, `inplace_list` and `inplace_vector` explicit ([#23](https://github.com/ZIMO-Elektronik/ZTL/issues/23))
+
 ## 0.25.2
-- Bugfix `ztl::mask` and `ztl::make_mask` may contain no bits ([#22](https://github.com/ZIMO-Elektronik/ZTL/issues/22))
+- Bugfix `mask` and `make_mask` may contain no bits ([#22](https://github.com/ZIMO-Elektronik/ZTL/issues/22))
 
 ## 0.25.1
 - Bugfix guard `std::integer_sequence` support for structured bindings ([#20](https://github.com/ZIMO-Elektronik/ZTL/issues/20))
@@ -13,7 +16,7 @@
 - Fix remove wrong attribute-specifier syntax `[[maybe_unused]]` attribute
 
 ## 0.24.1
-- Undeprecate `ztl::make_mask` for runtime values
+- Undeprecate `make_mask` for runtime values
 
 ## 0.24.0
 - Add `emplace` variants and `*_range` insert variants to `inplace_list`
