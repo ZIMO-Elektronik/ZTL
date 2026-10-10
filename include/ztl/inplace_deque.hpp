@@ -177,7 +177,7 @@ struct inplace_deque {
   // Construct/copy/destroy
   constexpr inplace_deque() = default;
   template<std::convertible_to<T>... Ts>
-  constexpr inplace_deque(Ts&&... ts) requires(sizeof...(Ts) < I + 1uz)
+  explicit constexpr inplace_deque(Ts&&... ts) requires(sizeof...(Ts) < I + 1uz)
     : _data{static_cast<T>(ts)...}, _wr{sizeof...(Ts)} {}
 
   // Iterators

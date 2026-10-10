@@ -107,7 +107,7 @@ struct inplace_list {
   // Construct/copy/destroy
   constexpr inplace_list() = default;
   template<std::convertible_to<T>... Ts>
-  constexpr inplace_list(Ts&&... ts) requires(sizeof...(Ts) <= I)
+  explicit constexpr inplace_list(Ts&&... ts) requires(sizeof...(Ts) <= I)
   {
     (push_back(static_cast<T>(ts)), ...);
   }
